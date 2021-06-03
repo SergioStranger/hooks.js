@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hooks.js</title>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="container">
+            <div class="row">
+                <div class="card">
+                    <div class="card-header">
+                        Получаем фильм
+                    </div>
+                    <div class="col-md-2">
+                        <img :src="films.data.posterUrl" class="card-img-top">
+                    </div>
+                    <div class="col-md-12">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ films.data.nameRu }}</h5>
+                            <p class="card-text">{{ films.data.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- / Главная страница -->
+
+        <!-- Конфигуратор -->
+        <section v-if="page === 'configurator'">
+            <div class="container">
+                <div class="row p-5">
+                    <div class="mb-3">
+                        <label class="form-label">Kinopoisk Api Unofficial</label>
+                        <input type="text" v-model="tokens.Kinopoisk" class="form-control" aria-describedby="ApiHelp">
+                        <div id="ApiHelp" class="form-text">Неофициальное API для доступа к актуальной информации кинопоиска.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Discord Server Webhooks</label>
+                        <input type="text" v-model="tokens.Discord" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary" @click.prevent="saveConfig()">Сохранить</button>
+                </div>
+            </div>
+        </section>
+        <!-- / Конфигуратор -->
+    </div>
+
+    <script src="assets/js/vue.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/css/bootstrap.min.css"></script>
+</body>
+
+</html>
