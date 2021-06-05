@@ -22,7 +22,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                    <ul class="navbar-nav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" href="#"
                                 @click.prevent="openPage('index')">Главная</a>
@@ -44,13 +44,12 @@
                             </ul>
                         </li>
                     </ul>
+                    <form class="d-flex">
+                        <input class="form-control me-2" type="search" placeholder="Ссылка на kinopoisk.ru"
+                            aria-label="Search" v-model="url">
+                        <button class="btn btn-success" type="submit" @click.prevent="getFilm()">Поиск</button>
+                    </form>
                 </div>
-
-                <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Ссылка на kinopoisk.ru"
-                        aria-label="Search" v-model="url">
-                    <button class="btn btn-outline-success" type="submit" @click.prevent="getFilm()">Поиск</button>
-                </form>
             </div>
         </nav>
         <!-- / Шапка -->
@@ -100,11 +99,13 @@
                 <div class="row p-5">
                     <div class="mb-3">
                         <label class="form-label">Kinopoisk Api Unofficial</label>
-                        <input :type="forms.showKinopoiskApi" v-model="tokens.Kinopoisk" class="form-control" aria-describedby="ApiHelp">
+                        <input :type="forms.showKinopoiskApi" v-model="tokens.Kinopoisk" class="form-control"
+                            aria-describedby="ApiHelp">
                         <div id="ApiHelp" class="form-text">Неофициальное API для доступа к актуальной информации
                             кинопоиска.</div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="text" id="KinopoiskApi" v-model="forms.showKinopoiskApi">
+                            <input class="form-check-input" type="checkbox" value="text" id="KinopoiskApi"
+                                v-model="forms.showKinopoiskApi">
                             <label class="form-check-label" for="KinopoiskApi">
                                 Показать токен
                             </label>
@@ -114,7 +115,8 @@
                         <label class="form-label">Discord Server Webhooks</label>
                         <input :type="forms.showDiscord" v-model="tokens.Discord" class="form-control">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="text" id="Discord" v-model="forms.showDiscord">
+                            <input class="form-check-input" type="checkbox" value="text" id="Discord"
+                                v-model="forms.showDiscord">
                             <label class="form-check-label" for="Discord">
                                 Показать hook
                             </label>
