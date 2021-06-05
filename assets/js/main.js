@@ -8,6 +8,10 @@ const app = new Vue({
             Kinopoisk: localStorage.getItem('KinopoiskApi'),
             Discord: localStorage.getItem('DiscordHook')
         },
+        forms: {
+            showKinopoiskApi: ['password'],
+            showDiscord: ['password']
+        }
     },
     methods: {
         getFilm() {
