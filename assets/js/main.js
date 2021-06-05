@@ -2,12 +2,12 @@ const app = new Vue({
     el: "#app",
     data: {
         url: null,
-        films: [],
+        films: null,
         page: 'index',
         tokens: {
             Kinopoisk: localStorage.getItem('KinopoiskApi'),
             Discord: localStorage.getItem('DiscordHook')
-        }
+        },
     },
     methods: {
         getFilm() {
@@ -19,7 +19,8 @@ const app = new Vue({
                     }
                 })
                 .then(res => res.json())
-                .then(data => this.films = data);
+                .then(data => this.films = data['data']);
+
         },
         sendFilm() {
             fetch(this.tokens.Discord, {
@@ -33,7 +34,7 @@ const app = new Vue({
                         "embeds": [{
                             "title": this.films.data.nameRu,
                             "color": 3368703,
-                            "description": "Описание",
+                            "description": "",
                             "timestamp": null,
                             "url": "https://sergios.fun",
                             "author": {
