@@ -1,6 +1,7 @@
 const app = new Vue({
     el: "#app",
     data: {
+        message: null,
         url: null,
         films: null,
         page: 'index',
@@ -41,7 +42,7 @@ const app = new Vue({
                     },
                     body: JSON.stringify({
                         "username": "Kuнoмaнuя NEWS",
-                        "content": "Сообщение1",
+                        "content": this.message,
                         "embeds": [{
                             "title": this.films.nameRu,
                             "color": 3368703,
