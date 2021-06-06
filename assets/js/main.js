@@ -65,7 +65,7 @@ const app = new Vue({
                             },
                             "fields": [{
                                     "name": ":book: Описание сюжета:",
-                                    "value": this.films.description,
+                                    "value": this.films.description.substr(1, 1000) + "...",
                                     "inline": false
                                 },
                                 {
