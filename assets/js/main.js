@@ -9,8 +9,8 @@ const app = new Vue({
             Discord: localStorage.getItem('DiscordHook')
         },
         forms: {
-            showKinopoiskApi: ['password'],
-            showDiscord: ['password']
+            showKinopoiskApi: false,
+            showDiscord: false
         },
         nightTheme: true
     },
