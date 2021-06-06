@@ -43,20 +43,20 @@ const app = new Vue({
                         "username": "Kuнoмaнuя NEWS",
                         "content": "Сообщение1",
                         "embeds": [{
-                            "title": this.films.data.nameRu,
+                            "title": this.films.nameRu,
                             "color": 3368703,
                             "description": "",
                             "timestamp": null,
                             "url": "https://sergios.fun",
                             "author": {
                                 "name": "Kuнoмaнuя NEWS",
-                                "url": "https://sergios.fun"
+                                "url": "https://sergios.fun/hooks.js"
                             },
                             "image": {
-                                "url": "https://media.discordapp.net/attachments/699872254187536464/793422443724800030/avka.jpg?width=683&height=683"
+                                "url": ""
                             },
                             "thumbnail": {
-                                "url": this.films.data.posterUrl
+                                "url": this.films.posterUrl
                             },
                             "footer": {
                                 "text": "hooks.js",
@@ -64,17 +64,17 @@ const app = new Vue({
                             },
                             "fields": [{
                                     "name": ":book: Описание сюжета:",
-                                    "value": "Краткое описание",
+                                    "value": this.films.description,
                                     "inline": false
                                 },
                                 {
                                     "name": ":date: Год:",
-                                    "value": this.films.data.year,
+                                    "value": this.films.year,
                                     "inline": true
                                 },
                                 {
                                     "name": "Длительность:",
-                                    "value": this.films.data.filmLength,
+                                    "value": this.films.filmLength,
                                     "inline": true
                                 },
                                 {
@@ -84,7 +84,7 @@ const app = new Vue({
                                 },
                                 {
                                     "name": ":link: Ссылка на просмотр",
-                                    "value": "Краткое описание",
+                                    "value": this.films.webUrl,
                                     "inline": false
                                 }
                             ]
