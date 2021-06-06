@@ -11,11 +11,18 @@ const app = new Vue({
         forms: {
             showKinopoiskApi: ['password'],
             showDiscord: ['password']
-        }
+        },
+        nightTheme: true
     },
     methods: {
         getFilm() {
-            fetch('https://kinopoiskapiunofficial.tech/api/v2.1/films/586251', {
+            if (this.url == null || this.url <= 0) {
+                alert('В голове у тебя пусто!')
+            } else if (typeof (this.url) != 'number') {
+                this.url = parseInt(this.url.replace(/\D+/g, ""));
+            }
+
+            fetch('https://kinopoiskapiunofficial.tech/api/v2.1/films/' + this.url, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
