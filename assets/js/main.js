@@ -15,6 +15,15 @@ const app = new Vue({
         },
         nightTheme: true
     },
+    computed: {
+        genres: function() {
+            let str = '';
+            for (let genre in app.films.genres) {
+                str += app.films.genres[genre]['genre'] + " ";
+            }
+            return str.trimEnd()
+        }
+    },
     methods: {
         getFilm() {
             if (this.url == null || this.url <= 0) {
@@ -75,12 +84,12 @@ const app = new Vue({
                                 },
                                 {
                                     "name": "Длительность:",
-                                    "value": this.films.filmLength,
+                                    "value": this.films.filmLength + " ч",
                                     "inline": true
                                 },
                                 {
                                     "name": ":film_frames: Жанр:",
-                                    "value": 'this.films.data.genres',
+                                    "value": this.genres,
                                     "inline": true
                                 },
                                 {
