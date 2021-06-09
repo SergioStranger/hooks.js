@@ -13,7 +13,11 @@ const app = new Vue({
             showKinopoiskApi: false,
             showDiscord: false
         },
-        nightTheme: true
+        nightTheme: true,
+        history: {
+            temp: [],
+            items: []
+        }
     },
     computed: {
         genres: function() {
@@ -25,14 +29,17 @@ const app = new Vue({
         }
     },
     methods: {
-        getFilm() {
+        openPage(pageName) {
+            this.page = pageName
+        },
+        async getFilm() {
             if (this.url == null || this.url <= 0) {
                 alert('В голове у тебя пусто!')
             } else if (typeof (this.url) != 'number') {
                 this.url = parseInt(this.url.replace(/\D+/g, ""));
             }
 
-            fetch('https://kinopoiskapiunofficial.tech/api/v2.1/films/' + this.url, {
+            await fetch('https://kinopoiskapiunofficial.tech/api/v2.1/films/' + this.url, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -42,6 +49,14 @@ const app = new Vue({
                 .then(res => res.json())
                 .then(data => this.films = data['data']);
 
+            await this.history.temp.unshift({
+                'name': this.films.nameRu, 
+                'poster': this.films.posterUrl, 
+                'description': this.films.description, 
+                'webUrl': this.films.webUrl
+            });
+
+            localStorage.setItem('searchHistory', JSON.stringify(this.history.temp));
         },
         sendFilm() {
             fetch(this.tokens.Discord, {
@@ -103,13 +118,23 @@ const app = new Vue({
                 })
                 .then(res => res.json())
                 .then(data => console.log(data));
+
+            this.message = null;
+            this.films = null
+        },
+        closeFilm() {
+            this.films = null
         },
         saveConfig() {
             localStorage.setItem('KinopoiskApi', this.tokens.Kinopoisk);
             localStorage.setItem('DiscordHook', this.tokens.Discord);
             this.page = 'index';
+        },
+        removeHistory() {
+            localStorage.removeItem('searchHistory');
+            location.reload();
         }
     }
 });
 
-app.getFilm();
+app.history.items = JSON.parse(localStorage.getItem('searchHistory'));
