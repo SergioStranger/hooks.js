@@ -124,6 +124,7 @@ const app = new Vue({
         },
         closeFilm() {
             this.films = null
+            app.history.items = JSON.parse(localStorage.getItem('searchHistory'));
         },
         saveConfig() {
             localStorage.setItem('KinopoiskApi', this.tokens.Kinopoisk);
