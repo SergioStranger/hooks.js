@@ -61,19 +61,23 @@
         <!-- Главная страница -->
         <section v-if="page === 'index'">
 
-            <div class="container" v-if="!films">
+            <div class="container overflow-hidden" v-if="!films">
                 <div class="row p-5">
                     <h1>Hooks.js?</h1>
                     <h4>Привет, это Hooks.js - третья версия микрософта по поиску и отсылки фильмов с Kinopoisk в
                         Discord</h4>
                     <input type="submit" class="btn btn-primary" value="Очистить историю" @click="removeHistory()">
 
-                    <div class="d-flex bg-light position-relative p-3 gy-3" v-for="item in history.items">
-                        <img :src="item.poster" class="flex-shrink-0 me-3" height="248px">
-                        <div>
-                            <h5 class="mt-0">{{ item.name }}</h5>
-                            <p>{{ item.description.substr(0, 720) + "..." }}</p>
-                            <a :href="item.webUrl" class="btn btn-primary stretched-link">{{ item.name }}</a>
+                    <div class="gy-4" v-for="item in history.items">
+                        <div class="row g-0 bg-light position-relative">
+                            <div class="col-lg-3 col-md-6 mb-md-0 p-md-4">
+                                <img :src="item.poster" class="w-100">
+                            </div>
+                            <div class="col-lg-9 col-md-6 p-4 ps-md-0">
+                                <h5 class="mt-0">{{ item.name }}</h5>
+                                <p>{{ item.description.substr(0, 720) + "..." }}</p>
+                                <a :href="item.webUrl" class="btn btn-primary stretched-link">{{ item.name }}</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -113,7 +117,8 @@
                             <div class="col-auto">
                                 <button type="submit" class="btn btn-primary mb-3" @click.prevent="sendFilm()">Отправить
                                     в Discord</button>
-                                <button type="submit" class="btn btn-primary mb-3" @click.prevent="closeFilm()">Закрыть</button>
+                                <button type="submit" class="btn btn-primary mb-3"
+                                    @click.prevent="closeFilm()">Закрыть</button>
                             </div>
                         </div>
                     </div>
