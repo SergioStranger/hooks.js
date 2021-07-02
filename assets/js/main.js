@@ -23,7 +23,10 @@ const app = new Vue({
         genres: function() {
             let str = '';
             for (let genre in app.films.genres) {
-                str += app.films.genres[genre]['genre'] + " ";
+                if(genre > 0) {
+                    str+= ", ";
+                }
+                str += app.films.genres[genre]['genre'];
             }
             return str.trimEnd()
         }
@@ -49,17 +52,17 @@ const app = new Vue({
                 .then(res => res.json())
                 .then(data => this.films = data['data']);
 
-            await this.history.temp.unshift({
-                'name': this.films.nameRu, 
-                'poster': this.films.posterUrl, 
-                'description': this.films.description, 
-                'webUrl': this.films.webUrl
-            });
-
-            localStorage.setItem('searchHistory', JSON.stringify(this.history.temp));
+                this.history.temp.unshift({
+                    'name': this.films.nameRu, 
+                    'poster': this.films.posterUrl, 
+                    'description': this.films.description, 
+                    'webUrl': this.films.webUrl
+                });
+    
+                localStorage.setItem('searchHistory', JSON.stringify(this.history.temp));
         },
-        sendFilm() {
-            fetch(this.tokens.Discord, {
+        async sendFilm() {
+            await fetch(this.tokens.Discord, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -78,10 +81,10 @@ const app = new Vue({
                                 "url": "https://sergios.fun/hooks.js"
                             },
                             "image": {
-                                "url": ""
+                                "url": this.films.posterUrl
                             },
                             "thumbnail": {
-                                "url": this.films.posterUrl
+                                "url": ""
                             },
                             "footer": {
                                 "text": "hooks.js",
@@ -116,11 +119,12 @@ const app = new Vue({
                         }]
                     })
                 })
-                .then(res => res.json())
-                .then(data => console.log(data));
+                // .then(res => res.json())
+                // .then(data => console.log(data));
 
             this.message = null;
-            this.films = null
+            this.films = null;
+            app.history.items = JSON.parse(localStorage.getItem('searchHistory'));
         },
         closeFilm() {
             this.films = null
