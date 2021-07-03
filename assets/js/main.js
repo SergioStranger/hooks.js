@@ -14,10 +14,6 @@ const app = new Vue({
             showDiscord: false
         },
         nightTheme: true,
-        history: {
-            temp: [],
-            items: []
-        }
     },
     computed: {
         genres: function() {
@@ -29,6 +25,14 @@ const app = new Vue({
                 str += app.films.genres[genre]['genre'];
             }
             return str.trimEnd()
+        },
+        historyItems: function() {
+            if(localStorage.getItem('userHistory')) {
+                let result = localStorage.getItem('userHistory')
+                return JSON.parse(result)
+            } else {
+                return [];
+            }
         }
     },
     methods: {
@@ -52,15 +56,8 @@ const app = new Vue({
                 .then(res => res.json())
                 .then(data => this.films = data['data']);
 
-                this.history.temp.unshift({
-                    'name': this.films.nameRu, 
-                    'poster': this.films.posterUrl, 
-                    'description': this.films.description, 
-                    'webUrl': this.films.webUrl
-                });
-    
-                localStorage.setItem('searchHistory', JSON.stringify(this.history.temp));
-        },
+            this.saveHistory()
+            },
         async sendFilm() {
             await fetch(this.tokens.Discord, {
                     method: 'POST',
@@ -128,7 +125,7 @@ const app = new Vue({
         },
         closeFilm() {
             this.films = null
-            app.history.items = JSON.parse(localStorage.getItem('searchHistory'));
+            // app.history.items = JSON.parse(localStorage.getItem('searchHistory'));
         },
         saveConfig() {
             localStorage.setItem('KinopoiskApi', this.tokens.Kinopoisk);
@@ -136,10 +133,19 @@ const app = new Vue({
             this.page = 'index';
         },
         removeHistory() {
-            localStorage.removeItem('searchHistory');
+            localStorage.removeItem('userHistory');
             location.reload();
-        }
+        },
+        saveHistory() {
+            let temp = {
+                'name': this.films.nameRu, 
+                'poster': this.films.posterUrl, 
+                'description': this.films.description, 
+                'webUrl': this.films.webUrl
+            };
+
+            this.historyItems.unshift(temp);
+            localStorage.setItem('userHistory', JSON.stringify(this.historyItems));
+        },
     }
 });
-
-app.history.items = JSON.parse(localStorage.getItem('searchHistory'));

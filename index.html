@@ -68,15 +68,15 @@
                         Discord</h4>
                     <input type="submit" class="btn btn-primary" value="Очистить историю" @click="removeHistory()">
 
-                    <div class="gy-4" v-for="item in history.items">
+                    <div class="gy-4" v-for="item in historyItems">
                         <div class="row g-0 bg-light position-relative">
                             <div class="col-lg-3 col-md-6 mb-md-0 p-md-4">
                                 <img :src="item.poster" class="w-100">
                             </div>
                             <div class="col-lg-9 col-md-6 p-4 ps-md-0">
                                 <h5 class="mt-0">{{ item.name }}</h5>
-                                <p>{{ item.description.substr(0, 720) + "..." }}</p>
-                                <a :href="item.webUrl" class="btn btn-primary stretched-link">{{ item.name }}</a>
+                                <p>{{ item.description.substr(0, 920) + "..." }}</p>
+                                <a :href="item.webUrl" class="btn btn-primary">{{ item.name }} - Кинопоиск</a>
                             </div>
                         </div>
                     </div>
