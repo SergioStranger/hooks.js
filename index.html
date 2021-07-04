@@ -133,13 +133,13 @@
                 <div class="row p-5">
                     <div class="mb-3">
                         <label class="form-label">Kinopoisk Api Unofficial</label>
-                        <input :type="forms.showKinopoiskApi ? 'text' : 'password'" v-model="tokens.Kinopoisk"
+                        <input :type="tokens.Kinopoisk.show ? 'text' : 'password'" v-model="tokens.Kinopoisk.item"
                             class="form-control" aria-describedby="ApiHelp">
                         <div id="ApiHelp" class="form-text">Неофициальное API для доступа к актуальной информации
                             кинопоиска.</div>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="true" id="KinopoiskApi"
-                                v-model="forms.showKinopoiskApi">
+                                v-model="tokens.Kinopoisk.show">
                             <label class="form-check-label" for="KinopoiskApi">
                                 Показать токен
                             </label>
@@ -147,11 +147,11 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Discord Server Webhooks</label>
-                        <input :type="forms.showDiscord ? 'text' : 'password'" v-model="tokens.Discord"
+                        <input :type="tokens.Discord.show ? 'text' : 'password'" v-model="tokens.Discord.item"
                             class="form-control">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="true" id="Discord"
-                                v-model="forms.showDiscord">
+                                v-model="tokens.Discord.show">
                             <label class="form-check-label" for="Discord">
                                 Показать hook
                             </label>

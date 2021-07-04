@@ -1,17 +1,19 @@
 const app = new Vue({
     el: "#app",
     data: {
-        message: null,
+        page: 'index',
         url: null,
         films: null,
-        page: 'index',
+        message: null,
         tokens: {
-            Kinopoisk: localStorage.getItem('KinopoiskApi'),
-            Discord: localStorage.getItem('DiscordHook')
-        },
-        forms: {
-            showKinopoiskApi: false,
-            showDiscord: false
+            Kinopoisk: {
+                item: localStorage.getItem('KinopoiskApi'),
+                show: false
+            },
+            Discord: {
+                item: localStorage.getItem('DiscordHook'),
+                show: false
+            }
         },
         nightTheme: true,
     },
@@ -39,6 +41,11 @@ const app = new Vue({
         openPage(pageName) {
             this.page = pageName
         },
+        saveConfig() {
+            localStorage.setItem('KinopoiskApi', this.tokens.Kinopoisk.item);
+            localStorage.setItem('DiscordHook', this.tokens.Discord.item);
+            this.page = 'index';
+        },
         async getFilm() {
             if (this.url == null || this.url <= 0) {
                 alert('В голове у тебя пусто!')
@@ -50,16 +57,16 @@ const app = new Vue({
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
-                        'X-API-KEY': this.tokens.Kinopoisk
+                        'X-API-KEY': this.tokens.Kinopoisk.item
                     }
                 })
                 .then(res => res.json())
                 .then(data => this.films = data['data']);
 
             this.saveHistory()
-            },
+        },
         async sendFilm() {
-            await fetch(this.tokens.Discord, {
+            await fetch(this.tokens.Discord.item, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -119,22 +126,12 @@ const app = new Vue({
                 // .then(res => res.json())
                 // .then(data => console.log(data));
 
-            this.message = null;
-            this.films = null;
-            app.history.items = JSON.parse(localStorage.getItem('searchHistory'));
+            app.closeFilm();
         },
         closeFilm() {
-            this.films = null
-            // app.history.items = JSON.parse(localStorage.getItem('searchHistory'));
-        },
-        saveConfig() {
-            localStorage.setItem('KinopoiskApi', this.tokens.Kinopoisk);
-            localStorage.setItem('DiscordHook', this.tokens.Discord);
-            this.page = 'index';
-        },
-        removeHistory() {
-            localStorage.removeItem('userHistory');
-            location.reload();
+            // Очистка полей
+            this.message = null;
+            this.films = null;
         },
         saveHistory() {
             let temp = {
@@ -147,5 +144,12 @@ const app = new Vue({
             this.historyItems.unshift(temp);
             localStorage.setItem('userHistory', JSON.stringify(this.historyItems));
         },
+        removeHistory() {
+            localStorage.removeItem('userHistory');
+            location.reload();
+        },
     }
 });
+
+console.log("%cДобро пожаловать в логи", "font-size: 64px; color: #212529; font-family: Impact;")
+console.log("%chttps://github.com/SergioStrangeS", "font-size: 18px; color: #0d6efd; font-family: Verdana;")
