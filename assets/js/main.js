@@ -47,13 +47,14 @@ const app = new Vue({
             this.page = 'index';
         },
         async getFilm() {
-            if (this.url == null || this.url <= 0) {
+            if (this.url == null || this.url == '') {
                 alert('В голове у тебя пусто!')
             } else if (typeof (this.url) != 'number') {
                 this.url = parseInt(this.url.replace(/\D+/g, ""));
             }
 
-            await fetch('https://kinopoiskapiunofficial.tech/api/v2.1/films/' + this.url, {
+            if(typeof(this.url) == 'number') {
+                await fetch('https://kinopoiskapiunofficial.tech/api/v2.1/films/' + this.url, {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -63,7 +64,8 @@ const app = new Vue({
                 .then(res => res.json())
                 .then(data => this.films = data['data']);
 
-            this.saveHistory()
+                this.saveHistory();
+            }
         },
         async sendFilm() {
             await fetch(this.tokens.Discord.item, {
@@ -134,20 +136,29 @@ const app = new Vue({
             this.films = null;
         },
         saveHistory() {
+            let date = new Date();
+            let timestamp = date.getHours() + ":" + date.getMinutes();
+
             let temp = {
                 'name': this.films.nameRu, 
                 'poster': this.films.posterUrl, 
                 'description': this.films.description, 
-                'webUrl': this.films.webUrl
+                'webUrl': this.films.webUrl,
+                'time': timestamp
             };
 
             this.historyItems.unshift(temp);
             localStorage.setItem('userHistory', JSON.stringify(this.historyItems));
         },
-        removeHistory() {
-            localStorage.removeItem('userHistory');
+        removeHistoryItem(item) {
+            this.historyItems.pop(item)
+            localStorage.setItem('userHistory', JSON.stringify(this.historyItems));
             location.reload();
         },
+        cleanHistory() {
+            localStorage.removeItem('userHistory');
+            location.reload();
+        }
     }
 });
 
