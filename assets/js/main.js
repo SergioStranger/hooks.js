@@ -136,8 +136,8 @@ const app = new Vue({
             this.films = null;
         },
         saveHistory() {
-            let date = new Date();
-            let timestamp = date.getHours() + ":" + date.getMinutes();
+            let now = new Date();
+            let timestamp = now.toLocaleTimeString() + " " + now.toLocaleDateString();
 
             let temp = {
                 'name': this.films.nameRu, 
@@ -151,7 +151,7 @@ const app = new Vue({
             localStorage.setItem('userHistory', JSON.stringify(this.historyItems));
         },
         removeHistoryItem(item) {
-            this.historyItems.pop(item)
+            this.historyItems.splice(item, 1);
             localStorage.setItem('userHistory', JSON.stringify(this.historyItems));
             location.reload();
         },
