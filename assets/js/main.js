@@ -63,8 +63,6 @@ const app = new Vue({
                 })
                 .then(res => res.json())
                 .then(data => this.films = data['data']);
-
-                this.saveHistory();
             }
         },
         async sendFilm() {
@@ -127,15 +125,19 @@ const app = new Vue({
                 })
                 // .then(res => res.json())
                 // .then(data => console.log(data));
-
-            app.closeFilm();
+            
+            // Вызываем функцию очистки полей
+            this.closeFilm('success');
         },
-        closeFilm() {
+        closeFilm(status) {
+            // Сперва отправим статус в Историю
+            this.saveHistory(status);
+            
             // Очистка полей
             this.message = null;
             this.films = null;
         },
-        saveHistory() {
+        saveHistory(status) {
             let now = new Date();
             let timestamp = now.toLocaleTimeString() + " " + now.toLocaleDateString();
 
@@ -144,6 +146,7 @@ const app = new Vue({
                 'poster': this.films.posterUrl, 
                 'description': this.films.description, 
                 'webUrl': this.films.webUrl,
+                'status': status,
                 'time': timestamp
             };
 
