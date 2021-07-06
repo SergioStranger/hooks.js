@@ -161,6 +161,10 @@ const app = new Vue({
         cleanHistory() {
             localStorage.removeItem('userHistory');
             location.reload();
+        },
+        researchFilm(url) {
+            this.url = url;
+            this.getFilm();
         }
     }
 });
