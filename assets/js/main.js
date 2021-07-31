@@ -4,6 +4,7 @@ const app = new Vue({
         page: 'index',
         url: null,
         films: null,
+        rating: null,
         message: null,
         tokens: {
             Kinopoisk: {
@@ -25,6 +26,16 @@ const app = new Vue({
                     str+= ", ";
                 }
                 str += app.films.genres[genre]['genre'];
+            }
+            return str.trimEnd()
+        },
+        countries: function() {
+            let str = '';
+            for (let country in app.films.countries) {
+                if(country > 0) {
+                    str+= ", ";
+                }
+                str += app.films.countries[country]['country'];
             }
             return str.trimEnd()
         },
@@ -54,7 +65,7 @@ const app = new Vue({
             }
 
             if(typeof(this.url) == 'number') {
-                await fetch('https://kinopoiskapiunofficial.tech/api/v2.1/films/' + this.url, {
+                await fetch('https://kinopoiskapiunofficial.tech/api/v2.1/films/' + this.url + "?append_to_response=RATING", {
                     method: 'GET',
                     headers: {
                         'accept': 'application/json',
@@ -62,7 +73,10 @@ const app = new Vue({
                     }
                 })
                 .then(res => res.json())
-                .then(data => this.films = data['data']);
+                .then(data => films = data);
+
+                this.films = films['data'];
+                this.rating = films['rating'];
             }
         },
         async sendFilm() {
@@ -75,7 +89,7 @@ const app = new Vue({
                         "username": "Kuнoмaнuя NEWS",
                         "content": this.message,
                         "embeds": [{
-                            "title": this.films.nameRu,
+                            "title": this.films.nameRu + " (" + this.films.year + ")",
                             "color": 3368703,
                             "description": "",
                             "timestamp": null,
@@ -88,25 +102,16 @@ const app = new Vue({
                                 "url": this.films.posterUrl
                             },
                             "thumbnail": {
-                                "url": ""
+                                "url": this.films.posterUrl
                             },
                             "footer": {
-                                "text": "hooks.js",
-                                "icon_url": "https://media.discordapp.net/attachments/699872254187536464/793422443724800030/avka.jpg?width=683&height=683"
+                                "text": "Возрастное ограничение: " + this.films.ratingAgeLimits + "+  |  Длительность: " + this.films.filmLength + " минут",
+                                "icon_url": "https://lh6.ggpht.com/S6_A7lzx3EfpKSBKm1Kg0N5IlHGgeja5Lb_CpPzWTB87cIsmKd70cl5GlL961ST4L9A"
                             },
-                            "fields": [{
-                                    "name": ":book: Описание сюжета:",
-                                    "value": this.films.description.substr(1, 1000) + "...",
-                                    "inline": false
-                                },
+                            "fields": [
                                 {
-                                    "name": ":date: Год:",
-                                    "value": this.films.year,
-                                    "inline": true
-                                },
-                                {
-                                    "name": "Длительность:",
-                                    "value": this.films.filmLength + " ч",
+                                    "name": "Слоган:",
+                                    "value": this.films.slogan,
                                     "inline": true
                                 },
                                 {
@@ -115,10 +120,30 @@ const app = new Vue({
                                     "inline": true
                                 },
                                 {
+                                    "name": ":book: Описание сюжета:",
+                                    "value": this.films.description.substr(0, 1000) + "...",
+                                    "inline": false
+                                },
+                                {
                                     "name": ":link: Ссылка на просмотр",
                                     "value": this.films.webUrl,
                                     "inline": false
-                                }
+                                },
+                                {
+                                    "name": ":map: Страна:",
+                                    "value": this.countries,
+                                    "inline": true
+                                },
+                                {
+                                    "name": ":flag_ru: Рейтинг Кинопоиск:",
+                                    "value": String(this.rating.rating),
+                                    "inline": true
+                                },
+                                {
+                                    "name": ":flag_us: Рейтинг IMDb:",
+                                    "value": String(this.rating.ratingImdb),
+                                    "inline": true
+                                },
                             ]
                         }]
                     })
