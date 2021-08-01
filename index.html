@@ -124,7 +124,7 @@
                         <img :src="films.posterUrl" class="card-img-top">
                     </div>
                     <div class="col-md-8 p-4 ps-md-0">
-                        <h5 class="mt-0">{{ films.nameRu }}</h5>
+                        <h4 class="mt-0">{{ films.nameRu }}</h4>
                         <p>{{ films.description }}</p>
                         <table class="table">
                             <thead>
@@ -132,6 +132,7 @@
                                     <th scope="col">Год</th>
                                     <th scope="col">Длительность</th>
                                     <th scope="col">Жанр</th>
+                                    <th scope="col">Смотрим сейчас?</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -139,6 +140,12 @@
                                     <td>{{ films.year }}</td>
                                     <td>{{ films.filmLength }} ч</td>
                                     <td>{{ genres }}</td>
+                                    <td>
+                                        <div class="form-check form-switch me-auto mb-2 mb-lg-0">
+                                            <input class="form-check-input" type="checkbox" checked
+                                                v-model="watchNow">
+                                        </div>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -153,7 +160,7 @@
                                 <button type="submit" class="btn btn-primary mb-3" @click.prevent="sendFilm()">Отправить
                                     в Discord</button>
                                 <button type="submit" class="btn btn-primary mb-3"
-                                    @click.prevent="closeFilm('closed')">Закрыть</button>
+                                    @click.prevent="closeFilm('closed')">Отмена</button>
                             </div>
                         </div>
                     </div>

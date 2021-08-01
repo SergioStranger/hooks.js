@@ -6,6 +6,7 @@ const app = new Vue({
         films: null,
         rating: null,
         message: null,
+        watchNow: null,
         tokens: {
             Kinopoisk: {
                 item: localStorage.getItem('KinopoiskApi'),
@@ -44,6 +45,13 @@ const app = new Vue({
                 return '-'
             } else {
                 return this.films.slogan
+            }
+        },
+        watchLink: function() {
+            if(this.watchNow == true) {
+                return "[Подключиться к голосовому каналу для просмотра](https://discord.gg/pMzSMbnHtm)";
+            } else {
+                return this.films.webUrl;
             }
         },
         historyItems: function() {
@@ -133,7 +141,7 @@ const app = new Vue({
                                 },
                                 {
                                     "name": ":link: Ссылка на просмотр",
-                                    "value": "[Подключиться к голосовому каналу для просмотра](https://discord.gg/pMzSMbnHtm)",
+                                    "value": this.watchLink,
                                     "inline": false
                                 },
                                 {
