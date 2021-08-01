@@ -133,7 +133,7 @@ const app = new Vue({
                                 },
                                 {
                                     "name": ":link: Ссылка на просмотр",
-                                    "value": this.films.webUrl,
+                                    "value": "[Подключиться к голосовому каналу для просмотра](https://discord.gg/pMzSMbnHtm)",
                                     "inline": false
                                 },
                                 {
