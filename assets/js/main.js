@@ -39,6 +39,13 @@ const app = new Vue({
             }
             return str.trimEnd()
         },
+        slogan: function() {
+            if(this.films.slogan == null) {
+                return '-'
+            } else {
+                return this.films.slogan
+            }
+        },
         historyItems: function() {
             if(localStorage.getItem('userHistory')) {
                 let result = localStorage.getItem('userHistory')
@@ -111,7 +118,7 @@ const app = new Vue({
                             "fields": [
                                 {
                                     "name": "Слоган:",
-                                    "value": this.films.slogan,
+                                    "value": this.slogan,
                                     "inline": true
                                 },
                                 {
