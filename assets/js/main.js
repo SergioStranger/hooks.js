@@ -6,7 +6,10 @@ const app = new Vue({
         films: null,
         rating: null,
         message: null,
-        watchNow: null,
+        watchNow: {
+            isWatchNow: null,
+            watchTime: null,
+        },
         tokens: {
             Kinopoisk: {
                 item: localStorage.getItem('KinopoiskApi'),
@@ -61,6 +64,15 @@ const app = new Vue({
             } else {
                 return [];
             }
+        },
+        timeNow: function() {
+            var date = new Date();
+            return date.getHours() + ':' + date.getMinutes()
+        },
+        watchOnTime: function() {
+            if(this.watchNow.isWatchNow && this.watchNow.watchTime) {
+                return this.timeNow
+            }
         }
     },
     methods: {
@@ -108,10 +120,10 @@ const app = new Vue({
                             "color": 3368703,
                             "description": "",
                             "timestamp": null,
-                            "url": "https://sergios.fun",
+                            "url": this.films.webUrl,
                             "author": {
                                 "name": "Kuнoмaнuя NEWS",
-                                "url": "https://sergios.fun/hooks.js"
+                                "url": "https://sergios.fun/"
                             },
                             "image": {
                                 "url": this.films.posterUrl
