@@ -95,9 +95,9 @@ const app = new Vue({
         },
         async getFilm() {
             if (this.url == null || this.url == '') {
-                alert('В голове у тебя пусто!')
+                notyf.error('Поле не должно оставаться пустым!')
             } else if (typeof (this.url) != 'number') {
-                this.url = parseInt(this.url.replace(/\D+/g, ""))
+                this.url = parseInt(this.url.replace(/\D+/g, ''))
             }
 
             if (typeof(this.url) == 'number') {
@@ -115,9 +115,9 @@ const app = new Vue({
                     this.films = films['data']
                     this.rating = films['rating']
                 } else if (films['status'] == 401) {
-                    notyf.error('Ошибка токена. Проверьте правильность ввода токена и повторите попытку');
+                    notyf.error('Ошибка токена. Проверьте правильность ввода токена и повторите попытку')
                 } else {
-                    notyf.error('Страница не найдена');
+                    notyf.error('Страница не найдена')
                 }
             }
         },
@@ -189,19 +189,24 @@ const app = new Vue({
                     }]
                 })
             })
-            // .then(res => res.json())
-            // .then(data => console.log(data));
+            .then(data => responce = data);
 
-            // Вызываем функцию очистки полей
-            this.closeFilm('success');
-        },
-        closeFilm(status) {
-            // Сперва отправим статус в Историю
-            this.saveHistory(status);
-
-            // Очистка полей
-            this.message = null;
-            this.films = null;
+            switch(responce['status']) {
+                case 204:
+                    notyf.success('Данные успешно отправленны!')
+                    // Вызываем функцию очистки полей
+                    this.saveHistory('success');
+                    break
+                case 401:
+                    notyf.error('Неверный токен!')
+                    break
+                case 400:
+                    notyf.error('Данные невозможно отправить! Обратитесь к разработчику сайта')
+                    break
+                default:
+                    notyf.error('Призошла неизвестная ошибка! Обратитесь к разработчику сайта')
+                    break
+            }
         },
         saveHistory(status) {
             let now = new Date();
@@ -218,6 +223,10 @@ const app = new Vue({
 
             this.historyItems.unshift(temp);
             localStorage.setItem('userHistory', JSON.stringify(this.historyItems));
+
+            // Очистка полей
+            this.message = null;
+            this.films = null;
         },
         removeHistoryItem(item) {
             this.historyItems.splice(item, 1);
