@@ -15,10 +15,7 @@ const app = new Vue({
         errors: null,
         rating: null,
         message: null,
-        watchNow: {
-            isWatchNow: null,
-            watchTime: null,
-        },
+        isWatchNow: false,
         tokens: {
             Kinopoisk: {
                 item: localStorage.getItem('KinopoiskApi'),
@@ -60,8 +57,8 @@ const app = new Vue({
             }
         },
         watchLink: function() {
-            if (this.watchNow == true) {
-                return "[Подключиться к голосовому каналу для просмотра](https://discord.gg/pMzSMbnHtm)";
+            if (this.isWatchNow) {
+                return `[:eyes: Подключиться к голосовому каналу для просмотра](https://discord.gg/pMzSMbnHtm) \n [:page_with_curl: Перейти на сайт для просмотра](${this.films.webUrl})`;
             } else {
                 return this.films.webUrl;
             }
@@ -74,15 +71,6 @@ const app = new Vue({
                 return [];
             }
         },
-        timeNow: function() {
-            var date = new Date();
-            return date.getHours() + ':' + date.getMinutes()
-        },
-        watchOnTime: function() {
-            if (this.watchNow.isWatchNow && this.watchNow.watchTime) {
-                return this.timeNow
-            }
-        }
     },
     methods: {
         openPage(pageName) {
@@ -198,10 +186,13 @@ const app = new Vue({
                     this.saveHistory('success');
                     break
                 case 401:
-                    notyf.error('Неверный токен!')
+                    notyf.error('Неверный токен Discord!')
                     break
                 case 400:
                     notyf.error('Данные невозможно отправить! Обратитесь к разработчику сайта')
+                    break
+                case 405:
+                    notyf.error('Не верно указан токен Discord!')
                     break
                 default:
                     notyf.error('Призошла неизвестная ошибка! Обратитесь к разработчику сайта')
