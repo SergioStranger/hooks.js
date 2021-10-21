@@ -58,13 +58,14 @@ const app = new Vue({
             }
         },
         watchLink: function() {
-            if (this.isWatchNow) {
+            if (this.isWatchNow && this.tokens.Together) {
                 if(this.tokens.Together.indexOf('https://') != -1) {
-                    return `[:eyes: Подключиться к голосовому каналу для просмотра](${this.tokens.Together}) \n [:page_with_curl: Перейти на сайт для просмотра](${this.films.webUrl})`;
+                    return `[:eyes: ┋ Подключиться к совместному каналу для просмотра](${this.tokens.Together}) \n [:page_with_curl: ┋ Перейти на сайт для просмотра](${this.films.webUrl})`
+                } else {
+                    return `[:page_with_curl: ┋ Перейти на сайт для просмотра](${this.films.webUrl})`
                 }
-                return `[:page_with_curl: Перейти на сайт для просмотра](${this.films.webUrl})`
             } else {
-                return this.films.webUrl;
+                return `[:page_with_curl: ┋ Перейти на сайт для просмотра](${this.films.webUrl})`
             }
         },
         historyItems: function() {
@@ -83,7 +84,6 @@ const app = new Vue({
         saveConfig() {
             localStorage.setItem('KinopoiskApi', this.tokens.Kinopoisk.item);
             localStorage.setItem('DiscordHook', this.tokens.Discord.item);
-            localStorage.setItem('TogetherURL', this.tokens.Together);
             this.page = 'index';
         },
         async getFilm() {
@@ -202,6 +202,10 @@ const app = new Vue({
                 default:
                     notyf.error('Призошла неизвестная ошибка! Обратитесь к разработчику сайта')
                     break
+            }
+
+            if(this.tokens.Together) {
+                localStorage.setItem('TogetherURL', this.tokens.Together)
             }
         },
         saveHistory(status) {
