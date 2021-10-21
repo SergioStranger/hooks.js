@@ -24,7 +24,8 @@ const app = new Vue({
             Discord: {
                 item: localStorage.getItem('DiscordHook'),
                 show: false
-            }
+            },
+            Together: localStorage.getItem('TogetherURL')
         },
         nightTheme: true,
     },
@@ -58,7 +59,10 @@ const app = new Vue({
         },
         watchLink: function() {
             if (this.isWatchNow) {
-                return `[:eyes: Подключиться к голосовому каналу для просмотра](https://discord.gg/pMzSMbnHtm) \n [:page_with_curl: Перейти на сайт для просмотра](${this.films.webUrl})`;
+                if(this.tokens.Together.indexOf('https://') != -1) {
+                    return `[:eyes: Подключиться к голосовому каналу для просмотра](${this.tokens.Together}) \n [:page_with_curl: Перейти на сайт для просмотра](${this.films.webUrl})`;
+                }
+                return `[:page_with_curl: Перейти на сайт для просмотра](${this.films.webUrl})`
             } else {
                 return this.films.webUrl;
             }
@@ -79,6 +83,7 @@ const app = new Vue({
         saveConfig() {
             localStorage.setItem('KinopoiskApi', this.tokens.Kinopoisk.item);
             localStorage.setItem('DiscordHook', this.tokens.Discord.item);
+            localStorage.setItem('TogetherURL', this.tokens.Together);
             this.page = 'index';
         },
         async getFilm() {
