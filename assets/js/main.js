@@ -31,22 +31,22 @@ const app = new Vue({
     },
     computed: {
         genres: function() {
-            let str = '';
+            let str = ''
             for (let genre in app.films.genres) {
                 if (genre > 0) {
-                    str += ", ";
+                    str += ", "
                 }
-                str += app.films.genres[genre]['genre'];
+                str += app.films.genres[genre]['genre']
             }
             return str.trimEnd()
         },
         countries: function() {
-            let str = '';
+            let str = ''
             for (let country in app.films.countries) {
                 if (country > 0) {
-                    str += ", ";
+                    str += ", "
                 }
-                str += app.films.countries[country]['country'];
+                str += app.films.countries[country]['country']
             }
             return str.trimEnd()
         },
@@ -73,7 +73,7 @@ const app = new Vue({
                 let result = localStorage.getItem('userHistory')
                 return JSON.parse(result)
             } else {
-                return [];
+                return []
             }
         },
     },
@@ -82,9 +82,9 @@ const app = new Vue({
             this.page = pageName
         },
         saveConfig() {
-            localStorage.setItem('KinopoiskApi', this.tokens.Kinopoisk.item);
-            localStorage.setItem('DiscordHook', this.tokens.Discord.item);
-            this.page = 'index';
+            localStorage.setItem('KinopoiskApi', this.tokens.Kinopoisk.item)
+            localStorage.setItem('DiscordHook', this.tokens.Discord.item)
+            this.page = 'index'
         },
         async getFilm() {
             if (this.url == null || this.url == '') {
@@ -102,7 +102,7 @@ const app = new Vue({
                         }
                     })
                     .then(res => res.json())
-                    .then(data => films = data);
+                    .then(data => films = data)
 
                 if (films['data'] && films['rating']) {
                     this.films = films['data']
@@ -182,13 +182,13 @@ const app = new Vue({
                     }]
                 })
             })
-            .then(data => responce = data);
+            .then(data => responce = data)
 
             switch(responce['status']) {
                 case 204:
                     notyf.success('Данные успешно отправленны!')
                     // Вызываем функцию очистки полей
-                    this.saveHistory('success');
+                    this.saveHistory('success')
                     break
                 case 401:
                     notyf.error('Неверный токен Discord!')
@@ -209,8 +209,8 @@ const app = new Vue({
             }
         },
         saveHistory(status) {
-            let now = new Date();
-            let timestamp = now.toLocaleTimeString() + " " + now.toLocaleDateString();
+            let now = new Date()
+            let timestamp = now.toLocaleTimeString() + " " + now.toLocaleDateString()
 
             let temp = {
                 'name': this.films.nameRu,
@@ -219,30 +219,30 @@ const app = new Vue({
                 'webUrl': this.films.webUrl,
                 'status': status,
                 'time': timestamp
-            };
+            }
 
-            this.historyItems.unshift(temp);
-            localStorage.setItem('userHistory', JSON.stringify(this.historyItems));
+            this.historyItems.unshift(temp)
+            localStorage.setItem('userHistory', JSON.stringify(this.historyItems))
 
             // Очистка полей
-            this.message = null;
-            this.films = null;
+            this.message = null
+            this.films = null
         },
         removeHistoryItem(item) {
-            this.historyItems.splice(item, 1);
-            localStorage.setItem('userHistory', JSON.stringify(this.historyItems));
-            location.reload();
+            this.historyItems.splice(item, 1)
+            localStorage.setItem('userHistory', JSON.stringify(this.historyItems))
+            location.reload()
         },
         cleanHistory() {
-            localStorage.removeItem('userHistory');
-            location.reload();
+            localStorage.removeItem('userHistory')
+            location.reload()
         },
         researchFilm(url) {
-            this.url = url;
-            this.getFilm();
+            this.url = url
+            this.getFilm()
         }
     }
-});
+})
 
 console.log("%cДобро пожаловать в логи", "font-size: 64px; color: #212529; font-family: Impact;")
 console.log("%chttps://github.com/SergioStrangeS", "font-size: 18px; color: #0d6efd; font-family: Verdana;")
