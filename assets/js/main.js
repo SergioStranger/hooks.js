@@ -10,7 +10,7 @@ const app = new Vue({
     el: "#app",
     data: {
         page: 'index',
-        url: null,
+        url: '',
         films: null,
         errors: null,
         rating: null,
@@ -32,49 +32,32 @@ const app = new Vue({
     computed: {
         genres: function() {
             let str = ''
-            for (let genre in app.films.genres) {
-                if (genre > 0) {
-                    str += ", "
-                }
+            for (genre in app.films.genres) {
+                genre > 0 ? str += ", " : false
                 str += app.films.genres[genre]['genre']
             }
             return str.trimEnd()
         },
         countries: function() {
             let str = ''
-            for (let country in app.films.countries) {
-                if (country > 0) {
-                    str += ", "
-                }
+            for (country in app.films.countries) {
+                country > 0 ? str += ", " : false
                 str += app.films.countries[country]['country']
             }
             return str.trimEnd()
         },
         slogan: function() {
-            if (this.films.slogan == null) {
-                return '-'
-            } else {
-                return this.films.slogan
-            }
+            return this.films.slogan != null ? this.films.slogan : '-'
         },
         watchLink: function() {
-            if (this.isWatchNow && this.tokens.Together) {
-                if(this.tokens.Together.indexOf('https://') != -1) {
+            if (this.isWatchNow && this.tokens.Together){
+                if(this.tokens.Together.indexOf('https://') != -1) 
                     return `[:eyes: ┋ Подключиться к совместному каналу для просмотра](${this.tokens.Together}) \n [:page_with_curl: ┋ Перейти на сайт для просмотра](${this.films.webUrl})`
-                } else {
-                    return `[:page_with_curl: ┋ Перейти на сайт для просмотра](${this.films.webUrl})`
-                }
-            } else {
-                return `[:page_with_curl: ┋ Перейти на сайт для просмотра](${this.films.webUrl})`
             }
+            return `[:page_with_curl: ┋ Перейти на сайт для просмотра](${this.films.webUrl})`
         },
         historyItems: function() {
-            if (localStorage.getItem('userHistory')) {
-                let result = localStorage.getItem('userHistory')
-                return JSON.parse(result)
-            } else {
-                return []
-            }
+            return localStorage.getItem('userHistory') ? JSON.parse(localStorage.getItem('userHistory')) : []
         },
     },
     methods: {
@@ -87,7 +70,7 @@ const app = new Vue({
             this.page = 'index'
         },
         async getFilm() {
-            if (this.url == null || this.url == '') {
+            if (this.url === '') {
                 notyf.error('Поле не должно оставаться пустым!')
             } else if (typeof (this.url) != 'number') {
                 this.url = parseInt(this.url.replace(/\D+/g, ''))
@@ -103,7 +86,6 @@ const app = new Vue({
                     })
                     .then(res => res.json())
                     .then(data => films = data)
-
                 if (films['data'] && films['rating']) {
                     this.films = films['data']
                     this.rating = films['rating']
@@ -210,7 +192,7 @@ const app = new Vue({
         },
         saveHistory(status) {
             let now = new Date()
-            let timestamp = now.toLocaleTimeString() + " " + now.toLocaleDateString()
+            let timestamp = now.toLocaleTimeString().concat(" " + now.toLocaleDateString())
 
             let temp = {
                 'name': this.films.nameRu,

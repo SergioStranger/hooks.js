@@ -96,12 +96,13 @@
                                         </svg>
                                     </small>
                                 </div>
-                                <p>{{ item.description.substr(0, 920) + "..." }}</p>
+                                <p>{{ item.description.substr(0, 1000) + "..." }}</p>
                                 <div class="d-flex justify-content-between gx-5">
                                     <div class="col">
                                         <a :href="item.webUrl" class="btn btn-primary">{{ item.name }} - Кинопоиск</a>
-                                        <a class="btn btn-primary" @click="researchFilm(item.webUrl)">Повторить
-                                            поиск</a>
+                                        <button class="btn btn-primary" @click="researchFilm(item.webUrl)"
+                                            :disabled="tokens.Kinopoisk.item == null || tokens.Kinopoisk.item == '' ? true : false">Повторить
+                                            поиск</button>
                                     </div>
                                     <a class="btn btn-danger" @click="removeHistoryItem(index)">Удалить <svg
                                             xmlns="http://www.w3.org/2000/svg" width="16" height="16"
