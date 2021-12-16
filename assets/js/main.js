@@ -12,6 +12,7 @@ const app = new Vue({
         page: 'index',
         url: '',
         films: null,
+        filmLink: null,
         errors: null,
         rating: null,
         message: null,
@@ -89,6 +90,7 @@ const app = new Vue({
                 if (films['data'] && films['rating']) {
                     this.films = films['data']
                     this.rating = films['rating']
+                    this.filmLink = 'https://www.sspoisk.ru/series/' + this.url
                 } else if (films['status'] == 401) {
                     notyf.error('Ошибка токена. Проверьте правильность ввода токена и повторите попытку')
                 } else {
@@ -205,6 +207,8 @@ const app = new Vue({
 
             this.historyItems.unshift(temp)
             localStorage.setItem('userHistory', JSON.stringify(this.historyItems))
+
+            this.openPage('index')
 
             // Очистка полей
             this.message = null

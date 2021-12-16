@@ -120,7 +120,7 @@
                 </div>
             </div>
 
-            <!-- Поиск фильма -->
+            <!-- Страница фильма -->
             <div class="container p-5" v-if="films">
                 <div class="row g-0 bg-light position-relative">
                     <div class="col-md-4 mb-md-0 p-md-4">
@@ -168,12 +168,33 @@
                                     в Discord</button>
                                 <button type="submit" class="btn btn-primary mb-3"
                                     @click.prevent="saveHistory('closed')">Отмена</button>
+                                <button type="submit" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Смотреть онлайн</button>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Просмотр фильма</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body" style="height: 500px">
+                                <iframe :src="filmLink" width="100%" height="100%"></iframe>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                <a :href="filmLink" target="_blank" class="btn btn-primary">Открыть в новой вкладке</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- / Modal -->
             </div>
-            <!-- / Поиск фильма -->
+            <!-- / Страница фильма -->
         </section>
         <!-- / Главная страница -->
 
