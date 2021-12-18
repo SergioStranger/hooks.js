@@ -28,7 +28,17 @@ const app = new Vue({
             },
             Together: localStorage.getItem('TogetherURL')
         },
-        nightTheme: true,
+        nightTheme: null,
+    },
+    mounted() {
+        if(localStorage.nightTheme) {
+            this.nightTheme = JSON.parse(localStorage.nightTheme)
+        }
+    },
+    watch: {
+        nightTheme(newTheme) {
+            localStorage.nightTheme = newTheme
+        }
     },
     computed: {
         genres: function() {
@@ -230,5 +240,5 @@ const app = new Vue({
     }
 })
 
-console.log("%cДобро пожаловать в логи", "font-size: 64px; color: #212529; font-family: Impact;")
+console.log("%cДобро пожаловать в логи", "font-size: 64px; color: #eee; font-family: Impact; text-shadow: 2px 4px 4px #000;")
 console.log("%chttps://github.com/SergioStrangeS", "font-size: 18px; color: #0d6efd; font-family: Verdana;")

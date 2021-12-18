@@ -15,7 +15,7 @@
 <body>
     <div id="app">
         <!-- Шапка -->
-        <nav class="navbar navbar-expand-lg" :class="nightTheme ? 'navbar-dark bg-dark' : 'navbar-light bg-light'">
+        <nav class="navbar navbar-expand-lg" :class="nightTheme ? 'navbar-dark bg-dark border-bottom border-secondary' : 'navbar-light bg-light'">
             <div class="container">
                 <a class="navbar-brand" href="#" @click="openPage('index')">HOOKS.js</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -63,7 +63,7 @@
         <!-- / Шапка -->
 
         <!-- Главная страница -->
-        <section v-if="page === 'index'">
+        <section v-if="page === 'index'" class="min-vh-100" :class="nightTheme ? 'bg-dark text-light' : null">
 
             <div class="container overflow-hidden" v-if="!films">
                 <div class="row p-5">
@@ -74,10 +74,11 @@
                         <a href="https://discord.com">Discord</a>
                     </p>
 
+                    <!-- Отображение истории фильмов -->
                     <div class="gy-4" v-for="(item, index) in historyItems">
-                        <div class="row g-0 bg-light position-relative">
+                        <div class="row g-0 position-relative rounded" :class="nightTheme ? 'bg-light text-light bg-opacity-10' : 'bg-light'">
                             <div class="col-lg-3 col-md-6 mb-md-0 p-md-4">
-                                <img :src="item.poster" class="w-100">
+                                <img :src="item.poster" class="w-100 rounded">
                             </div>
                             <div class="col-lg-9 col-md-6 p-4 ps-md-0">
                                 <div class="d-flex justify-content-between">
@@ -117,19 +118,20 @@
                             </div>
                         </div>
                     </div>
+                    <!-- / Отображение истории фильмов -->
                 </div>
             </div>
 
             <!-- Страница фильма -->
             <div class="container p-5" v-if="films">
-                <div class="row g-0 bg-light position-relative">
+                <div class="row g-0 bg-light position-relative" :class="nightTheme ? 'bg-light text-light bg-opacity-10' : 'bg-light'">
                     <div class="col-md-4 mb-md-0 p-md-4">
                         <img :src="films.posterUrl" class="card-img-top">
                     </div>
                     <div class="col-md-8 p-4 ps-md-0">
                         <h4 class="mt-0">{{ films.nameRu }}</h4>
                         <p>{{ films.description }}</p>
-                        <table class="table">
+                        <table class="table" :class="nightTheme ? 'text-light' : null">
                             <thead>
                                 <tr>
                                     <th scope="col">Год</th>
@@ -156,7 +158,7 @@
                             <label class="form-label">Ссылка для совместного просмотра</label>
                             <input type="text" class="form-control" v-model="tokens.Together">
                         </div>
-                        <div class="row g-0 bg-light position-relative">
+                        <div class="row g-0 position-relative">
                             <div class="col-md-12 p-4 ps-md-0">
                                 <label for="exampleFormControlTextarea1" class="form-label">Сообщение для
                                     отправки</label>
@@ -177,7 +179,7 @@
                 <!-- Modal -->
                 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog modal-xl">
-                        <div class="modal-content">
+                        <div class="modal-content" :class="nightTheme ? 'bg-dark' : null">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="staticBackdropLabel">Просмотр фильма</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -199,7 +201,7 @@
         <!-- / Главная страница -->
 
         <!-- Конфигуратор -->
-        <section v-if="page === 'configurator'">
+        <section v-if="page === 'configurator'" class="min-vh-100" :class="nightTheme ? 'bg-dark text-light' : ''">
             <div class="container">
                 <div class="row p-5">
                     <div class="mb-3">
