@@ -17,26 +17,47 @@ const app = new Vue({
         rating: null,
         message: null,
         isWatchNow: false,
-        tokens: {
+        localdata: {
             Kinopoisk: {
-                item: localStorage.getItem('KinopoiskApi'),
+                item: null,
                 show: false
             },
             Discord: {
-                item: localStorage.getItem('DiscordHook'),
+                item: null,
                 show: false
             },
-            Together: localStorage.getItem('TogetherURL')
-        },
-        nightTheme: null,
+            Together: null,
+            nightTheme: null
+        }
     },
     mounted() {
+        if(localStorage.KinopoiskToken) {
+            this.localdata.Kinopoisk.item = localStorage.KinopoiskToken
+        }
+
+        if(localStorage.DiscordToken) {
+            this.localdata.Discord.item = localStorage.DiscordToken
+        }
+
+        if(localStorage.TogetherUrl) {
+            this.localdata.Together = localStorage.TogetherUrl
+        }
+
         if(localStorage.nightTheme) {
-            this.nightTheme = JSON.parse(localStorage.nightTheme)
+            this.localdata.nightTheme = JSON.parse(localStorage.nightTheme)
         }
     },
     watch: {
-        nightTheme(newTheme) {
+        'localdata.Kinopoisk.item': function(newToken) {
+            localStorage.KinopoiskToken = newToken
+        },
+        'localdata.Discord.item': function(newToken) {
+            localStorage.DiscordToken = newToken
+        },
+        'localdata.Together': function(newToken) {
+            localStorage.TogetherUrl = newToken
+        },
+        'localdata.nightTheme': function(newTheme) {
             localStorage.nightTheme = newTheme
         }
     },
@@ -61,9 +82,9 @@ const app = new Vue({
             return this.films.slogan != null ? this.films.slogan : '-'
         },
         watchLink: function() {
-            if (this.isWatchNow && this.tokens.Together){
-                if(this.tokens.Together.indexOf('https://') != -1) 
-                    return `[:eyes: ┋ Подключиться к совместному каналу для просмотра](${this.tokens.Together}) \n [:page_with_curl: ┋ Перейти на сайт для просмотра](${this.films.webUrl})`
+            if (this.isWatchNow && this.localdata.Together){
+                if(this.localdata.Together.indexOf('https://') != -1) 
+                    return `[:eyes: ┋ Подключиться к совместному каналу для просмотра](${this.localdata.Together}) \n [:page_with_curl: ┋ Перейти на сайт для просмотра](${this.films.webUrl})`
             }
             return `[:page_with_curl: ┋ Перейти на сайт для просмотра](${this.films.webUrl})`
         },
@@ -74,11 +95,6 @@ const app = new Vue({
     methods: {
         openPage(pageName) {
             this.page = pageName
-        },
-        saveConfig() {
-            localStorage.setItem('KinopoiskApi', this.tokens.Kinopoisk.item)
-            localStorage.setItem('DiscordHook', this.tokens.Discord.item)
-            this.page = 'index'
         },
         async getFilm() {
             if (this.url === '') {
@@ -92,7 +108,7 @@ const app = new Vue({
                         method: 'GET',
                         headers: {
                             'accept': 'application/json',
-                            'X-API-KEY': this.tokens.Kinopoisk.item
+                            'X-API-KEY': this.localdata.Kinopoisk.item
                         }
                     })
                     .then(res => res.json())
@@ -109,7 +125,7 @@ const app = new Vue({
             }
         },
         async sendFilm() {
-            await fetch(this.tokens.Discord.item, {
+            await fetch(this.localdata.Discord.item, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -198,8 +214,8 @@ const app = new Vue({
                     break
             }
 
-            if(this.tokens.Together) {
-                localStorage.setItem('TogetherURL', this.tokens.Together)
+            if(this.localdata.Together) {
+                localStorage.setItem('TogetherURL', this.localdata.Together)
             }
         },
         saveHistory(status) {

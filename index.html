@@ -15,7 +15,7 @@
 <body>
     <div id="app">
         <!-- Шапка -->
-        <nav class="navbar navbar-expand-lg" :class="nightTheme ? 'navbar-dark bg-dark border-bottom border-secondary' : 'navbar-light bg-light'">
+        <nav class="navbar navbar-expand-lg" :class="localdata.nightTheme ? 'navbar-dark bg-dark border-bottom border-secondary' : 'navbar-light bg-light'">
             <div class="container">
                 <a class="navbar-brand" href="#" @click="openPage('index')">HOOKS.js</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -26,7 +26,7 @@
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <div class="form-check form-switch me-auto mb-2 mb-lg-0">
                         <input class="form-check-input" type="checkbox" id="flexSwitchTheme" checked
-                            v-model="nightTheme">
+                            v-model="localdata.nightTheme">
                     </div>
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
@@ -54,7 +54,7 @@
                         <input class="form-control me-2" type="search" placeholder="Кинопоиск ID" aria-label="Search"
                             v-model="url">
                         <button class="btn btn-success" type="submit"
-                            :disabled="tokens.Kinopoisk.item == null || tokens.Kinopoisk.item == '' ? true : false"
+                            :disabled="localdata.Kinopoisk.item == null || localdata.Kinopoisk.item == '' ? true : false"
                             @click.prevent="getFilm()">Поиск</button>
                     </form>
                 </div>
@@ -63,7 +63,7 @@
         <!-- / Шапка -->
 
         <!-- Главная страница -->
-        <section v-if="page === 'index'" class="min-vh-100" :class="nightTheme ? 'bg-dark text-light' : null">
+        <section v-if="page === 'index'" class="min-vh-100" :class="localdata.nightTheme ? 'bg-dark text-light' : null">
 
             <div class="container overflow-hidden" v-if="!films">
                 <div class="row p-5">
@@ -76,7 +76,7 @@
 
                     <!-- Отображение истории фильмов -->
                     <div class="gy-4" v-for="(item, index) in historyItems">
-                        <div class="row g-0 position-relative rounded" :class="nightTheme ? 'bg-light text-light bg-opacity-10' : 'bg-light'">
+                        <div class="row g-0 position-relative rounded" :class="localdata.nightTheme ? 'bg-light text-light bg-opacity-10' : 'bg-light'">
                             <div class="col-lg-3 col-md-6 mb-md-0 p-md-4">
                                 <img :src="item.poster" class="w-100 rounded">
                             </div>
@@ -102,7 +102,7 @@
                                     <div class="col">
                                         <a :href="item.webUrl" class="btn btn-primary">{{ item.name }} - Кинопоиск</a>
                                         <button class="btn btn-primary" @click="researchFilm(item.webUrl)"
-                                            :disabled="tokens.Kinopoisk.item == null || tokens.Kinopoisk.item == '' ? true : false">Повторить
+                                            :disabled="localdata.Kinopoisk.item == null || localdata.Kinopoisk.item == '' ? true : false">Повторить
                                             поиск</button>
                                     </div>
                                     <a class="btn btn-danger" @click="removeHistoryItem(index)">Удалить <svg
@@ -124,14 +124,14 @@
 
             <!-- Страница фильма -->
             <div class="container p-5" v-if="films">
-                <div class="row g-0 bg-light position-relative" :class="nightTheme ? 'bg-light text-light bg-opacity-10' : 'bg-light'">
+                <div class="row g-0 bg-light position-relative" :class="localdata.nightTheme ? 'bg-light text-light bg-opacity-10' : 'bg-light'">
                     <div class="col-md-4 mb-md-0 p-md-4">
                         <img :src="films.posterUrl" class="card-img-top">
                     </div>
                     <div class="col-md-8 p-4 ps-md-0">
                         <h4 class="mt-0">{{ films.nameRu }}</h4>
                         <p>{{ films.description }}</p>
-                        <table class="table" :class="nightTheme ? 'text-light' : null">
+                        <table class="table" :class="localdata.nightTheme ? 'text-light' : null">
                             <thead>
                                 <tr>
                                     <th scope="col">Год</th>
@@ -156,7 +156,7 @@
                         </table>
                         <div class="mb-3" v-if="isWatchNow">
                             <label class="form-label">Ссылка для совместного просмотра</label>
-                            <input type="text" class="form-control" v-model="tokens.Together">
+                            <input type="text" class="form-control" v-model="localdata.Together">
                         </div>
                         <div class="row g-0 position-relative">
                             <div class="col-md-12 p-4 ps-md-0">
@@ -170,18 +170,18 @@
                                     в Discord</button>
                                 <button type="submit" class="btn btn-primary mb-3"
                                     @click.prevent="saveHistory('closed')">Отмена</button>
-                                <button type="submit" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Смотреть онлайн</button>
+                                <button type="submit" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#WatchFilm">Смотреть онлайн</button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Modal -->
-                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <!-- WatchFilm Modal -->
+                <div class="modal fade" id="WatchFilm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="WatchFilmLabel" aria-hidden="true">
                     <div class="modal-dialog modal-xl">
-                        <div class="modal-content" :class="nightTheme ? 'bg-dark' : null">
+                        <div class="modal-content" :class="localdata.nightTheme ? 'bg-dark' : null">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="staticBackdropLabel">Просмотр фильма</h5>
+                                <h5 class="modal-title" id="WatchFilmLabel">Просмотр фильма</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body" style="height: 500px">
@@ -194,25 +194,25 @@
                         </div>
                     </div>
                 </div>
-                <!-- / Modal -->
+                <!-- / WatchFilm Modal -->
             </div>
             <!-- / Страница фильма -->
         </section>
         <!-- / Главная страница -->
 
         <!-- Конфигуратор -->
-        <section v-if="page === 'configurator'" class="min-vh-100" :class="nightTheme ? 'bg-dark text-light' : ''">
+        <section v-if="page === 'configurator'" class="min-vh-100" :class="localdata.nightTheme ? 'bg-dark text-light' : ''">
             <div class="container">
                 <div class="row p-5">
                     <div class="mb-3">
                         <label class="form-label">Kinopoisk Api Unofficial</label>
-                        <input :type="tokens.Kinopoisk.show ? 'text' : 'password'" v-model="tokens.Kinopoisk.item"
+                        <input :type="localdata.Kinopoisk.show ? 'text' : 'password'" v-model="localdata.Kinopoisk.item"
                             class="form-control" aria-describedby="ApiHelp">
                         <div id="ApiHelp" class="form-text">Неофициальное API для доступа к актуальной информации
                             кинопоиска.</div>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="true" id="KinopoiskApi"
-                                v-model="tokens.Kinopoisk.show">
+                                v-model="localdata.Kinopoisk.show">
                             <label class="form-check-label" for="KinopoiskApi">
                                 Показать токен
                             </label>
@@ -220,18 +220,18 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Discord Server Webhooks</label>
-                        <input :type="tokens.Discord.show ? 'text' : 'password'" v-model="tokens.Discord.item"
+                        <input :type="localdata.Discord.show ? 'text' : 'password'" v-model="localdata.Discord.item"
                             class="form-control">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="true" id="Discord"
-                                v-model="tokens.Discord.show">
+                                v-model="localdata.Discord.show">
                             <label class="form-check-label" for="Discord">
                                 Показать hook
                             </label>
                         </div>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <button class="btn btn-primary" @click.prevent="saveConfig()">Сохранить настройки</button>
+                        <button class="btn btn-primary" @click="openPage('index')">Сохранить и выйти</button>
                         <input type="submit" class="btn btn-danger" value="Очистить историю поиска"
                             @click="cleanHistory()">
                     </div>
