@@ -17,7 +17,7 @@
         <!-- Шапка -->
         <nav class="navbar navbar-expand-lg border-bottom" :class="localdata.nightTheme ? 'navbar-dark bg-dark border-secondary' : 'navbar-light bg-light'">
             <div class="container">
-                <a class="navbar-brand" href="#" @click="openPage('index')">HOOKS.js</a>
+                <a class="navbar-brand" href="#">HOOKS.js</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -30,8 +30,7 @@
                     </div>
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="#"
-                                @click.prevent="openPage('index')">Главная</a>
+                            <a class="nav-link" aria-current="page" href="#">Главная</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#config">Конфигуратор</a>
@@ -63,7 +62,7 @@
         <!-- / Шапка -->
 
         <!-- Главная страница -->
-        <section v-if="page === 'index'" class="min-vh-100" :class="localdata.nightTheme ? 'bg-dark text-light' : null">
+        <section class="min-vh-100" :class="localdata.nightTheme ? 'bg-dark text-light' : null">
 
             <div class="container overflow-hidden" v-if="!films">
                 <div class="row p-5">
@@ -237,8 +236,30 @@
                         </div>
                     </div>
                     <div class="modal-footer d-flex justify-content-between">
-                        <button type="submit" class="btn btn-danger" @click.prevent="cleanHistory()">Очистить историю поиска</button>
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#secondConfigPage">Дополнительные настройки</button>
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Сохранить и выйти</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вторая страница конфигуратора -->
+        <div class="modal fade" id="secondConfigPage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="secondConfigPageLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="secondConfigPageLabel">Конфигуратор - дополнительные настройки</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="gap-2 d-sm-flex justify-content-sm-center">
+                            <button type="submit" class="btn btn-outline-danger my-2 w-100" @click.prevent="cleanHistory()">Очистить историю поиска</button>
+                            <button type="submit" class="btn btn-outline-danger my-2 w-100" @click.prevent="resetToDefault()">Сбросить до настроек по умолчанию</button>
+                        </div>
+                        <button type="submit" class="btn btn-outline-danger my-2 w-100" @click.prevent="devTool()">Загрузить историю поиска по умаолчанию</button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#config">Назад</button>
                     </div>
                 </div>
             </div>
