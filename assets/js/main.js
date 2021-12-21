@@ -89,7 +89,14 @@ const app = new Vue({
             return `[:page_with_curl: ┋ Перейти на сайт для просмотра](${this.films.webUrl})`
         },
         historyItems: function() {
-            return localStorage.getItem('userHistory') ? JSON.parse(localStorage.getItem('userHistory')) : []
+            return localStorage.getItem('userHistory') ? JSON.parse(localStorage.getItem('userHistory')) : [{
+                "name": "Эквилибриум",
+                "poster": "https://kinopoiskapiunofficial.tech/images/posters/kp/309.jpg",
+                "description": "В будущем люди лишены возможности выражать эмоции. Это цена, которую человечество платит за устранение из своей жизни войны. Теперь книги, искусство и музыка находятся вне закона, а любое чувство — преступление, наказуемое смертью.\n\nДля приведения в жизнь существующего правила используется принудительное применение лекарства прозиум. Правительственный агент Джон Престон борется с теми, кто нарушает правила. В один прекрасный момент он забывает принять очередную дозу лекарства, и с ним происходит духовное преображение, что приводит его к конфликту не только с режимом, но и с самим собой.",
+                "webUrl": "https://www.kinopoisk.ru/film/309/",
+                "status": "closed",
+                "time": "00:00:00 21.12.2021"
+            }]
         },
     },
     methods: {
