@@ -63,7 +63,7 @@
 
         <!-- Главная страница -->
         <section class="min-vh-100" :class="localdata.nightTheme ? 'bg-dark text-light' : null">
-
+            <!-- Основной контент -->
             <div class="container overflow-hidden" v-if="!films">
 
                 <div class="px-4 pt-5 my-3 text-center border-bottom">
@@ -75,12 +75,12 @@
                         </p>
                         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
                             <a href="#instruction" class="btn btn-primary btn-lg px-4 me-sm-3">Инструкция</a>
-                            <!-- <button type="button" class="btn btn-outline-secondary btn-lg px-4">Закрыть</button> -->
+                            <a href="#demo" class="btn btn-outline-success btn-lg px-4" @click="isDemo = true">Демо</a>
                         </div>
                     </div>
                     <div class="overflow-hidden" style="max-height: 30vh;">
                         <div class="container px-5">
-                            <img src="assets//images/image.png" v-if="!localdata.nightTheme"
+                            <img src="assets/images/image.png" v-if="!localdata.nightTheme"
                                 class="img-fluid border rounded-3 shadow-lg mb-4" alt="Single page - light" loading="lazy"
                                 width="700" height="500">
                             <img src="assets/images/image-dark.png" v-if="localdata.nightTheme"
@@ -90,7 +90,92 @@
                     </div>
                 </div>
 
-                <div class="row p-5">
+                <!-- Демо страница фильма -->
+                <div class="container p-5" v-if="isDemo" id="demo">
+                    <div class="row g-0 bg-light position-relative" :class="localdata.nightTheme ? 'bg-light text-light bg-opacity-10' : 'bg-light'">
+                        <div class="col-md-4 mb-md-0 p-md-4">
+                            <img src="https://kinopoiskapiunofficial.tech/images/posters/kp/309.jpg" class="card-img-top">
+                        </div>
+                        <div class="col-md-8 p-4 ps-md-0">
+                            <h4 class="mt-0">Эквилибриум</h4>
+                            <p>
+                                В будущем люди лишены возможности выражать эмоции. Это цена, которую человечество платит за
+                                устранение из своей жизни войны. Теперь книги, искусство и музыка находятся вне закона, а любое
+                                чувство — преступление, наказуемое смертью. Для приведения в жизнь существующего правила
+                                используется принудительное применение лекарства прозиум. Правительственный агент Джон Престон
+                                борется с теми, кто нарушает правила. В один прекрасный момент он забывает принять очередную
+                                дозу лекарства, и с ним происходит духовное преображение, что приводит его к конфликту не только
+                                с режимом, но и с самим собой.
+                            </p>
+                            <table class="table" :class="localdata.nightTheme ? 'text-light' : null">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Год</th>
+                                        <th scope="col">Длительность</th>
+                                        <th scope="col">Жанр</th>
+                                        <th scope="col">Смотрим сейчас?</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2002</td>
+                                        <td>01:47 ч</td>
+                                        <td>боевик, драма, триллер, фантастика</td>
+                                        <td>
+                                            <div class="form-check form-switch me-auto mb-2 mb-lg-0">
+                                                <input class="form-check-input" type="checkbox" checked
+                                                    v-model="isWatchNow">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="mb-3" v-if="isWatchNow">
+                                <label class="form-label">Ссылка для совместного просмотра</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="row g-0 position-relative">
+                                <div class="col-md-12 p-4 ps-md-0">
+                                    <label for="exampleFormControlTextarea1" class="form-label">Сообщение для
+                                        отправки</label>
+                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                                        v-model="message"></textarea>
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#AccessDenied">Отправить
+                                        в Discord</button>
+                                        <button type="submit" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#AccessDenied">Смотреть онлайн</button>
+                                        <a href="#" class="btn btn-outline-danger mb-3"@click="isDemo = false">Закрыть</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Нет доступа - окно -->
+                    <div class="modal fade" id="AccessDenied" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="AccessDeniedLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content" :class="localdata.nightTheme ? 'bg-dark' : null">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="AccessDeniedLabel">Нет доступа =(</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body" style="max-height: 500px">
+                                    <div class="alert alert-danger" role="alert">
+                                        Нет доступна к функции в режиме демо
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                    <button class="btn btn-primary" disabled>Открыть в новой вкладке</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- / Нет доступа - окно -->
+                </div>
+                <!-- / Демо страница фильма -->
+
+                <div class="row p-5" v-if="!isDemo">
 
                     <!-- Отображение истории фильмов -->
                     <div class="gy-4" v-for="(item, index) in historyItems">
@@ -199,6 +284,7 @@
                     </div>
                 </div>
             </div>
+            <!-- / Основной контент -->
 
             <!-- Страница фильма -->
             <div class="container p-5" v-if="films">
@@ -246,9 +332,8 @@
                             <div class="col-auto">
                                 <button type="submit" class="btn btn-primary mb-3" @click.prevent="sendFilm()">Отправить
                                     в Discord</button>
-                                <button type="submit" class="btn btn-primary mb-3"
-                                    @click.prevent="saveHistory('closed')">Отмена</button>
                                 <button type="submit" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#WatchFilm">Смотреть онлайн</button>
+                                <button type="submit" class="btn btn-outline-danger mb-3" @click.prevent="saveHistory('closed')">Отмена</button>
                             </div>
                         </div>
                     </div>
@@ -322,7 +407,6 @@
             </div>
         </div>
 
-        <!-- Вторая страница конфигуратора -->
         <div class="modal fade" id="secondConfigPage" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="secondConfigPageLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">

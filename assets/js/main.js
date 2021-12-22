@@ -28,7 +28,8 @@ const app = new Vue({
             },
             Together: null,
             nightTheme: null
-        }
+        },
+        isDemo: false
     },
     mounted() {
         if(localStorage.KinopoiskToken) {
