@@ -41,9 +41,9 @@
                                 Предыдущие версии
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="dropdown-item"
+                                <li><a class="dropdown-item" target="_blank"
                                         href="https://github.com/SergioStrangeS/hooks.ds">hooks.ds</a></li>
-                                <li><a class="dropdown-item"
+                                <li><a class="dropdown-item" target="_blank"
                                         href="https://github.com/SergioStrangeS/DiscordWebhooks">DiscordWebhooks</a>
                                 </li>
                             </ul>
@@ -74,8 +74,8 @@
                                 аниме</strong> и отправки контента с автоматизированным оформлением в чат-сервис Discord
                         </p>
                         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
-                            <!-- <button type="button" class="btn btn-primary btn-lg px-4 me-sm-3">Инструкция</button>
-                            <button type="button" class="btn btn-outline-secondary btn-lg px-4">Закрыть</button> -->
+                            <a href="#instruction" class="btn btn-primary btn-lg px-4 me-sm-3">Инструкция</a>
+                            <!-- <button type="button" class="btn btn-outline-secondary btn-lg px-4">Закрыть</button> -->
                         </div>
                     </div>
                     <div class="overflow-hidden" style="max-height: 30vh;">
@@ -99,7 +99,7 @@
                                 <img :src="item.poster" class="w-100 rounded">
                             </div>
                             <div class="col-lg-9 col-md-6 p-4 ps-md-0">
-                                <div class="d-flex justify-content-between">
+                                <div class="d-lg-flex justify-content-between">
                                     <h4 class="mt-0">{{ item.name }}</h4>
 
                                     <small class="text-muted">
@@ -116,14 +116,14 @@
                                     </small>
                                 </div>
                                 <p>{{ item.description.substr(0, 1000) + "..." }}</p>
-                                <div class="d-flex justify-content-between gx-5">
+                                <div class="d-lg-flex justify-content-between">
                                     <div class="col">
-                                        <a :href="item.webUrl" class="btn btn-primary">{{ item.name }} - Кинопоиск</a>
-                                        <button class="btn btn-primary" @click="researchFilm(item.webUrl)"
+                                        <a :href="item.webUrl" class="btn btn-primary mb-2">На страницу фильма</a>
+                                        <button class="btn btn-primary mb-2" @click="researchFilm(item.webUrl)"
                                             :disabled="localdata.Kinopoisk.item == null || localdata.Kinopoisk.item == '' ? true : false">Повторить
                                             поиск</button>
                                     </div>
-                                    <a class="btn btn-danger" @click="removeHistoryItem(index)">Удалить <svg
+                                    <a class="btn btn-danger mb-2" @click="removeHistoryItem(index)">Удалить <svg
                                             xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                                             <path
@@ -139,7 +139,7 @@
                     <!-- / Отображение истории фильмов -->
                 </div>
 
-                <div class="container px-4 py-5">
+                <div class="container px-4 py-5" id="instruction">
                     <h2 class="pb-2 border-bottom">Что требуется для работы веб-приложения?</h2>
                     <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
                         <div class="col d-flex align-items-start">
@@ -335,7 +335,7 @@
                             <button type="submit" class="btn btn-outline-danger my-2 w-100" @click.prevent="cleanHistory()">Очистить историю поиска</button>
                             <button type="submit" class="btn btn-outline-danger my-2 w-100" @click.prevent="resetToDefault()">Сбросить до настроек по умолчанию</button>
                         </div>
-                        <button type="submit" class="btn btn-outline-danger my-2 w-100" @click.prevent="devTool()">Загрузить историю поиска по умаолчанию</button>
+                        <button type="submit" class="btn btn-outline-danger my-2 w-100" @click.prevent="devTool()">Загрузить историю поиска по умолчанию</button>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#config">Назад</button>
