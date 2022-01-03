@@ -27,9 +27,10 @@ const app = new Vue({
                 show: false
             },
             Together: null,
-            nightTheme: null
+            nightTheme: null,
+            historyItems: []
         },
-        isDemo: false
+        isDemo: false,
     },
     mounted() {
         if(localStorage.KinopoiskToken) {
@@ -47,6 +48,10 @@ const app = new Vue({
         if(localStorage.nightTheme) {
             this.localdata.nightTheme = JSON.parse(localStorage.nightTheme)
         }
+
+        if(localStorage.userHistory) {
+            this.localdata.historyItems = JSON.parse(localStorage.userHistory)
+        } 
     },
     watch: {
         'localdata.Kinopoisk.item': function(newToken) {
@@ -88,17 +93,7 @@ const app = new Vue({
                     return `[:eyes: ┋ Подключиться к совместному каналу для просмотра](${this.localdata.Together}) \n [:page_with_curl: ┋ Перейти на сайт для просмотра](${this.films.webUrl})`
             }
             return `[:page_with_curl: ┋ Перейти на сайт для просмотра](${this.films.webUrl})`
-        },
-        historyItems: function() {
-            return localStorage.getItem('userHistory') ? JSON.parse(localStorage.getItem('userHistory')) : [{
-                "name": "Эквилибриум",
-                "poster": "https://kinopoiskapiunofficial.tech/images/posters/kp/309.jpg",
-                "description": "В будущем люди лишены возможности выражать эмоции. Это цена, которую человечество платит за устранение из своей жизни войны. Теперь книги, искусство и музыка находятся вне закона, а любое чувство — преступление, наказуемое смертью.\n\nДля приведения в жизнь существующего правила используется принудительное применение лекарства прозиум. Правительственный агент Джон Престон борется с теми, кто нарушает правила. В один прекрасный момент он забывает принять очередную дозу лекарства, и с ним происходит духовное преображение, что приводит его к конфликту не только с режимом, но и с самим собой.",
-                "webUrl": "https://www.kinopoisk.ru/film/309/",
-                "status": "closed",
-                "time": "00:00:00 21.12.2021"
-            }]
-        },
+        }
     },
     methods: {
         async getFilm() {
@@ -227,8 +222,9 @@ const app = new Vue({
             let now = new Date()
             let timestamp = now.toLocaleTimeString().concat(" " + now.toLocaleDateString())
 
-            let temp = {
+            let item = {
                 'name': this.films.nameRu,
+                'year': '(' + this.films.year + ')',
                 'poster': this.films.posterUrl,
                 'description': this.films.description,
                 'webUrl': this.films.webUrl,
@@ -236,17 +232,17 @@ const app = new Vue({
                 'time': timestamp
             }
 
-            this.historyItems.unshift(temp)
-            localStorage.setItem('userHistory', JSON.stringify(this.historyItems))
+            this.localdata.historyItems.unshift(item)
+
+            localStorage.userHistory = JSON.stringify(this.localdata.historyItems)
 
             // Очистка полей
             this.message = null
             this.films = null
         },
         removeHistoryItem(item) {
-            this.historyItems.splice(item, 1)
-            localStorage.setItem('userHistory', JSON.stringify(this.historyItems))
-            location.reload()
+            this.localdata.historyItems.splice(item, 1)
+            localStorage.userHistory = JSON.stringify(this.localdata.historyItems)
         },
         cleanHistory() {
             if(confirm('Вся история фильмов будет очищенна, продолжить?')) {
@@ -302,7 +298,7 @@ const app = new Vue({
         resetToDefault() {
             if(confirm('Настройки будут сброшены, продолжить?')) {
                 localStorage.clear();
-                localStorage.userHistory = JSON.stringify(this.historyItems)
+                localStorage.userHistory = JSON.stringify(this.localdata.historyItems)
                 location.reload()
             }
         },

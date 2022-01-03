@@ -145,7 +145,7 @@
                                     <button type="submit" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#AccessDenied">Отправить
                                         в Discord</button>
                                         <button type="submit" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#AccessDenied">Смотреть онлайн</button>
-                                        <a href="#" class="btn btn-outline-danger mb-3"@click="isDemo = false">Закрыть</a>
+                                        <button type="submit" class="btn btn-outline-danger mb-3" @click="isDemo = false">Закрыть</button>
                                 </div>
                             </div>
                         </div>
@@ -178,14 +178,14 @@
                 <div class="row p-5" v-if="!isDemo">
 
                     <!-- Отображение истории фильмов -->
-                    <div class="gy-4" v-for="(item, index) in historyItems">
+                    <div class="gy-4" v-for="(item, index) in localdata.historyItems">
                         <div class="row g-0 position-relative rounded" :class="localdata.nightTheme ? 'bg-light text-light bg-opacity-10' : 'bg-light'">
-                            <div class="col-lg-3 col-md-6 mb-md-0 p-md-4">
+                            <div class="col-xl-2 col-md-4 mb-md-0 p-md-4">
                                 <img :src="item.poster" class="w-100 rounded">
                             </div>
-                            <div class="col-lg-9 col-md-6 p-4 ps-md-0">
+                            <div class="col-xl-10 col-md-8 p-4 ps-md-0">
                                 <div class="d-lg-flex justify-content-between">
-                                    <h4 class="mt-0">{{ item.name }}</h4>
+                                    <h4 class="mt-0">{{ item.name }} {{ item.year }}</h4>
 
                                     <small class="text-muted">
                                         <span class="badge bg-success" v-if="item.status == 'success'">Отправлен</span>
@@ -324,9 +324,9 @@
                         </div>
                         <div class="row g-0 position-relative">
                             <div class="col-md-12 p-4 ps-md-0">
-                                <label for="exampleFormControlTextarea1" class="form-label">Сообщение для
+                                <label for="DiscordMessage" class="form-label">Сообщение для
                                     отправки</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                                <textarea class="form-control" id="DiscordMessage" rows="3"
                                     v-model="message"></textarea>
                             </div>
                             <div class="col-auto">
