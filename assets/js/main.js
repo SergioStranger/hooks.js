@@ -28,7 +28,8 @@ const app = new Vue({
             },
             Together: null,
             nightTheme: null,
-            historyItems: []
+            historyItems: [],
+            agree: false
         },
         isDemo: false,
     },
@@ -51,7 +52,11 @@ const app = new Vue({
 
         if(localStorage.userHistory) {
             this.localdata.historyItems = JSON.parse(localStorage.userHistory)
-        } 
+        }
+
+        if(localStorage.agree) {
+            this.localdata.agree = localStorage.agree
+        }
     },
     watch: {
         'localdata.Kinopoisk.item': function(newToken) {
@@ -65,6 +70,9 @@ const app = new Vue({
         },
         'localdata.nightTheme': function(newTheme) {
             localStorage.nightTheme = newTheme
+        },
+        'localdata.agree': function(newItem) {
+            localStorage.agree = newItem
         }
     },
     computed: {
@@ -214,6 +222,10 @@ const app = new Vue({
                     break
             }
 
+            if(responce['status'] !== 204) {
+                this.saveHistory('closed')
+            }
+
             if(this.localdata.Together) {
                 localStorage.setItem('TogetherURL', this.localdata.Together)
             }
@@ -223,8 +235,7 @@ const app = new Vue({
             let timestamp = now.toLocaleTimeString().concat(" " + now.toLocaleDateString())
 
             let item = {
-                'name': this.films.nameRu,
-                'year': '(' + this.films.year + ')',
+                'name': this.films.nameRu + ' (' + this.films.year + ')',
                 'poster': this.films.posterUrl,
                 'description': this.films.description,
                 'webUrl': this.films.webUrl,
@@ -237,8 +248,7 @@ const app = new Vue({
             localStorage.userHistory = JSON.stringify(this.localdata.historyItems)
 
             // Очистка полей
-            this.message = null
-            this.films = null
+            this.message = this.films = null
         },
         removeHistoryItem(item) {
             this.localdata.historyItems.splice(item, 1)
@@ -302,6 +312,12 @@ const app = new Vue({
                 location.reload()
             }
         },
+        closeFrame() {
+            if(document.getElementById("watchFrame")) {
+                let frame = document.getElementById("watchFrame");
+                frame.src = frame.src;
+            }
+        }
     }
 })
 
