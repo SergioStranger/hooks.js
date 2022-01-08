@@ -135,16 +135,32 @@ const app = new Vue({
                             'X-API-KEY': this.localdata.Kinopoisk.item
                         }
                     })
-                    .then(res => res.json())
+                    .then(res => {
+                        switch(res.status) {
+                            case 200:
+                                notyf.success('Запрос выполнен успешно')
+                                break;
+                            case 401:
+                                notyf.error('Пустой или неправильный токен')
+                                break;
+                            case 404:
+                                notyf.error('Фильм не найден')
+                                break;
+                            case 429:
+                                notyf.error('Слишком много запросов. Общий лимит - 20 запросов в секунду')
+                            default:
+                                notyf.error('Не самый удачный запрос')
+                                break;
+                        }
+                        return res.json()
+                    })
                     .then(data => this.films = data)
 
-                // if (this.films) {
-                //     this.filmLink = 'https://www.sspoisk.ru/series/' + this.url
-                // } else if (films['status'] == 401) {
-                //     notyf.error('Ошибка токена. Проверьте правильность ввода токена и повторите попытку')
-                // } else {
-                //     notyf.error('Страница не найдена')
-                // }
+                if(this.films.kinopoiskId) {
+                    this.filmLink = 'https://www.sspoisk.ru/series/' + this.films.kinopoiskId
+                } else {
+                    this.films = null
+                }
             }
         },
         async sendFilm() {
