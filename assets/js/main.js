@@ -14,7 +14,6 @@ const app = new Vue({
         films: null,
         filmLink: null,
         errors: null,
-        rating: null,
         message: null,
         isWatchNow: false,
         localdata: {
@@ -31,7 +30,7 @@ const app = new Vue({
             historyItems: [],
             agree: false
         },
-        isDemo: false,
+        isDemo: false
     },
     mounted() {
         if(localStorage.KinopoiskToken) {
@@ -93,7 +92,7 @@ const app = new Vue({
             return str.trimEnd()
         },
         slogan: function() {
-            return this.films.slogan != null ? this.films.slogan : '-'
+            return this.films.slogan != null ? this.films.slogan : 'без слогана'
         },
         watchLink: function() {
             if (this.isWatchNow && this.localdata.Together){
@@ -101,6 +100,23 @@ const app = new Vue({
                     return `[:eyes: ┋ Подключиться к совместному каналу для просмотра](${this.localdata.Together}) \n [:page_with_curl: ┋ Перейти на сайт для просмотра](${this.films.webUrl})`
             }
             return `[:page_with_curl: ┋ Перейти на сайт для просмотра](${this.films.webUrl})`
+        },
+        filmLength: function() {
+            let length = this.films.filmLength
+            if(length > 60) {
+                let hour = Math.floor(length / 60)
+                let minuts = length % 60
+
+                return hour + ' ч ' + minuts + ' мин'
+            } else {
+                return length + ' мин'
+            }
+        },
+        ratingAgeLimits: function() {
+            return this.films.ratingAgeLimits == null ? 'Приятного просмотра  |  ' : "Возрастное ограничение: " + parseInt(this.films.ratingAgeLimits.replace(/\D+/g, '')) + '+  |  '
+        },
+        description: function() {
+            return this.films.description.length > 1000 ? this.films.description.substr(0, 1000) + "..." : this.films.description
         }
     },
     methods: {
@@ -112,7 +128,7 @@ const app = new Vue({
             }
 
             if (typeof(this.url) == 'number') {
-                await fetch('https://kinopoiskapiunofficial.tech/api/v2.1/films/' + this.url + "?append_to_response=RATING", {
+                await fetch('https://kinopoiskapiunofficial.tech/api/v2.2/films/' + this.url, {
                         method: 'GET',
                         headers: {
                             'accept': 'application/json',
@@ -120,16 +136,15 @@ const app = new Vue({
                         }
                     })
                     .then(res => res.json())
-                    .then(data => films = data)
-                if (films['data'] && films['rating']) {
-                    this.films = films['data']
-                    this.rating = films['rating']
-                    this.filmLink = 'https://www.sspoisk.ru/series/' + this.url
-                } else if (films['status'] == 401) {
-                    notyf.error('Ошибка токена. Проверьте правильность ввода токена и повторите попытку')
-                } else {
-                    notyf.error('Страница не найдена')
-                }
+                    .then(data => this.films = data)
+
+                // if (this.films) {
+                //     this.filmLink = 'https://www.sspoisk.ru/series/' + this.url
+                // } else if (films['status'] == 401) {
+                //     notyf.error('Ошибка токена. Проверьте правильность ввода токена и повторите попытку')
+                // } else {
+                //     notyf.error('Страница не найдена')
+                // }
             }
         },
         async sendFilm() {
@@ -158,7 +173,7 @@ const app = new Vue({
                             "url": this.films.posterUrl
                         },
                         "footer": {
-                            "text": "Возрастное ограничение: " + this.films.ratingAgeLimits + "+  |  Длительность: " + this.films.filmLength + " минут",
+                            "text": this.ratingAgeLimits + "Длительность: " + this.filmLength,
                             "icon_url": "https://lh6.ggpht.com/S6_A7lzx3EfpKSBKm1Kg0N5IlHGgeja5Lb_CpPzWTB87cIsmKd70cl5GlL961ST4L9A"
                         },
                         "fields": [{
@@ -173,7 +188,7 @@ const app = new Vue({
                             },
                             {
                                 "name": ":book: Описание сюжета:",
-                                "value": this.films.description.substr(0, 1000) + "...",
+                                "value": this.description,
                                 "inline": false
                             },
                             {
@@ -188,12 +203,12 @@ const app = new Vue({
                             },
                             {
                                 "name": ":flag_ru: Рейтинг Кинопоиск:",
-                                "value": String(this.rating.rating),
+                                "value": String(this.films.ratingKinopoisk),
                                 "inline": true
                             },
                             {
                                 "name": ":flag_us: Рейтинг IMDb:",
-                                "value": String(this.rating.ratingImdb),
+                                "value": String(this.films.ratingImdb),
                                 "inline": true
                             },
                         ]
