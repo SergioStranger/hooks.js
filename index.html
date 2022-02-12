@@ -10,6 +10,7 @@
     <!-- Стили -->
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/notyf.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
@@ -25,8 +26,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <div class="form-check form-switch me-auto mb-2 mb-lg-0">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchTheme" checked
-                            v-model="localdata.nightTheme">
+                        <input class="form-check-input" type="checkbox" checked v-model="localdata.nightTheme">
                     </div>
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
@@ -63,50 +63,239 @@
 
         <!-- Главная страница -->
         <section class="min-vh-100" :class="localdata.nightTheme ? 'bg-dark text-light' : null">
-            <!-- Основной контент -->
-            <div class="container overflow-hidden" v-if="!films">
+            <transition name="main" mode="out-in">
+                <!-- Основной контент -->
+                <div class="container overflow-hidden" key="main" v-if="!films">
 
-                <div class="px-4 pt-5 my-3 text-center border-bottom">
-                    <h1 class="display-4 fw-bold">Hooks.js</h1>
-                    <div class="col-lg-6 mx-auto">
-                        <p class="lead mb-4">
-                            Простое веб-приложение, для поиска информации о <strong>фильме / сериале / мультфильме /
-                                аниме</strong> и отправки контента с автоматизированным оформлением в чат-сервис Discord
-                        </p>
-                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
-                            <a href="#instruction" class="btn btn-primary btn-lg px-4 me-sm-3">Инструкция</a>
-                            <a href="#demo" class="btn btn-outline-success btn-lg px-4" @click="isDemo = true">Демо</a>
+                    <div class="px-4 pt-5 my-3 text-center border-bottom">
+                        <h1 class="display-4 fw-bold">Hooks.js</h1>
+                        <div class="col-lg-6 mx-auto">
+                            <p class="lead mb-4">
+                                Простое веб-приложение, для поиска информации о <strong>фильме / сериале / мультфильме /
+                                    аниме</strong> и отправки контента с автоматизированным оформлением в чат-сервис Discord
+                            </p>
+                            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+                                <a href="#instruction" class="btn btn-primary btn-lg px-4 me-sm-3">Инструкция</a>
+                                <a href="#demo" class="btn btn-outline-success btn-lg px-4" @click="isDemo = true">Демо</a>
+                            </div>
+                        </div>
+                        <div class="overflow-hidden" style="max-height: 30vh;">
+                            <div class="container px-5">
+                                <img src="assets/images/image.png" v-if="!localdata.nightTheme"
+                                    class="img-fluid border rounded-3 shadow-lg mb-4" alt="Single page - light" loading="lazy"
+                                    width="700" height="500">
+                                <img src="assets/images/image-dark.png" v-if="localdata.nightTheme"
+                                    class="img-fluid border rounded-3 shadow-lg mb-4" alt="Single page - dark" loading="lazy"
+                                    width="700" height="500">
+                            </div>
                         </div>
                     </div>
-                    <div class="overflow-hidden" style="max-height: 30vh;">
-                        <div class="container px-5">
-                            <img src="assets/images/image.png" v-if="!localdata.nightTheme"
-                                class="img-fluid border rounded-3 shadow-lg mb-4" alt="Single page - light" loading="lazy"
-                                width="700" height="500">
-                            <img src="assets/images/image-dark.png" v-if="localdata.nightTheme"
-                                class="img-fluid border rounded-3 shadow-lg mb-4" alt="Single page - dark" loading="lazy"
-                                width="700" height="500">
+
+                    <!-- Демо страница фильма -->
+                    <div class="container p-5" v-if="isDemo" id="demo">
+                        <div class="row g-0 bg-light position-relative" :class="localdata.nightTheme ? 'bg-light text-light bg-opacity-10' : 'bg-light'">
+                            <div class="col-md-4 mb-md-0 p-md-4">
+                                <img src="https://kinopoiskapiunofficial.tech/images/posters/kp/309.jpg" class="card-img-top">
+                            </div>
+                            <div class="col-md-8 p-4 ps-md-0">
+                                <h4 class="mt-0">Эквилибриум</h4>
+                                <p>
+                                    В будущем люди лишены возможности выражать эмоции. Это цена, которую человечество платит за
+                                    устранение из своей жизни войны. Теперь книги, искусство и музыка находятся вне закона, а любое
+                                    чувство — преступление, наказуемое смертью. Для приведения в жизнь существующего правила
+                                    используется принудительное применение лекарства прозиум. Правительственный агент Джон Престон
+                                    борется с теми, кто нарушает правила. В один прекрасный момент он забывает принять очередную
+                                    дозу лекарства, и с ним происходит духовное преображение, что приводит его к конфликту не только
+                                    с режимом, но и с самим собой.
+                                </p>
+                                <table class="table" :class="localdata.nightTheme ? 'text-light' : null">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Год</th>
+                                            <th scope="col">Длительность</th>
+                                            <th scope="col">Жанр</th>
+                                            <th scope="col">Смотрим сейчас?</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>2002</td>
+                                            <td>01:47 ч</td>
+                                            <td>боевик, драма, триллер, фантастика</td>
+                                            <td>
+                                                <div class="form-check form-switch me-auto mb-2 mb-lg-0">
+                                                    <input class="form-check-input" type="checkbox" checked
+                                                        v-model="isWatchNow">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="mb-3" v-if="isWatchNow">
+                                    <label class="form-label">Ссылка для совместного просмотра</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="row g-0 position-relative">
+                                    <div class="col-md-12 p-4 ps-md-0">
+                                        <label for="exampleFormControlTextarea1" class="form-label">Сообщение для
+                                            отправки</label>
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                                            v-model="message"></textarea>
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="submit" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#AccessDenied">Отправить
+                                            в Discord</button>
+                                            <button type="submit" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#AccessDenied">Смотреть онлайн</button>
+                                            <button type="submit" class="btn btn-outline-danger mb-3" @click="isDemo = false">Закрыть</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Нет доступа - окно -->
+                        <div class="modal fade" id="AccessDenied" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="AccessDeniedLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content" :class="localdata.nightTheme ? 'bg-dark' : null">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="AccessDeniedLabel">Нет доступа =(</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body" style="max-height: 500px">
+                                        <div class="alert alert-danger" role="alert">
+                                            Нет доступна к функции в режиме демо
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                        <button class="btn btn-primary" disabled>Открыть в новой вкладке</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- / Нет доступа - окно -->
+                    </div>
+                    <!-- / Демо страница фильма -->
+
+                    <div class="row p-5" v-if="!isDemo">
+
+                        <!-- Отображение истории фильмов -->
+                        <div class="gy-4" v-for="(item, index) in localdata.historyItems">
+                            <div class="row g-0 position-relative rounded" :class="localdata.nightTheme ? 'bg-light text-light bg-opacity-10' : 'bg-light'">
+                                <div class="col-xl-2 col-md-4 mb-md-0 p-md-4">
+                                    <img :src="item.poster" class="w-100 rounded">
+                                </div>
+                                <div class="col-xl-10 col-md-8 p-4 ps-md-0">
+                                    <div class="d-lg-flex justify-content-between">
+                                        <h4 class="mt-0">{{ item.name }}</h4>
+
+                                        <small class="text-muted">
+                                            <span class="badge bg-success" v-if="item.status == 'success'">Отправлен</span>
+                                            <span class="badge bg-danger" v-if="item.status == 'closed'">Не отправлен</span>
+                                            {{ item.time }}
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                fill="currentColor" class="bi bi-alarm" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9V5.5z" />
+                                                <path
+                                                    d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1h-3zm1.038 3.018a6.093 6.093 0 0 1 .924 0 6 6 0 1 1-.924 0zM0 3.5c0 .753.333 1.429.86 1.887A8.035 8.035 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5zM13.5 1c-.753 0-1.429.333-1.887.86a8.035 8.035 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1z" />
+                                            </svg>
+                                        </small>
+                                    </div>
+                                    <p>{{ item.description.substr(0, 1000) + "..." }}</p>
+                                    <div class="d-lg-flex justify-content-between">
+                                        <div class="col">
+                                            <a :href="item.webUrl" class="btn btn-primary mb-2">На страницу фильма</a>
+                                            <button class="btn btn-primary mb-2" @click="researchFilm(item.webUrl)"
+                                                :disabled="localdata.Kinopoisk.item == null || localdata.Kinopoisk.item == '' ? true : false">Повторить
+                                                поиск</button>
+                                        </div>
+                                        <a class="btn btn-danger mb-2" @click="removeHistoryItem(index)">Удалить <svg
+                                                xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                                <path fill-rule="evenodd"
+                                                    d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                                            </svg>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- / Отображение истории фильмов -->
+                    </div>
+
+                    <div class="container px-4 py-5" id="instruction">
+                        <h2 class="pb-2 border-bottom">Что требуется для работы веб-приложения?</h2>
+                        <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+                            <div class="col d-flex align-items-start">
+                                <div class="me-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-film" viewBox="0 0 16 16">
+                                        <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1zm4 0v6h8V1H4zm8 8H4v6h8V9zM1 1v2h2V1H1zm2 3H1v2h2V4zM1 7v2h2V7H1zm2 3H1v2h2v-2zm-2 3v2h2v-2H1zM15 1h-2v2h2V1zm-2 3v2h2V4h-2zm2 3h-2v2h2V7zm-2 3v2h2v-2h-2zm2 3h-2v2h2v-2z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h2>Шаг 1</h2>
+                                    <p>
+                                        Перейти в личный кабинет <a href="https://kinopoiskapiunofficial.tech">Kinopoisk Api
+                                            Unofficial</a>, и скопировать токен в конфигуратор
+                                        <code>Kinopoisk Api Unofficial</code>
+                                    </p>
+                                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#config">
+                                        Открыть конфигуратор
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col d-flex align-items-start">
+                                <div class="me-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-discord" viewBox="0 0 16 16">
+                                        <path d="M13.545 2.907a13.227 13.227 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.833.051.051 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.041.041 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.276 13.276 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.01-.059.051.051 0 0 0-.018-.011 8.875 8.875 0 0 1-1.248-.595.05.05 0 0 1-.02-.066.051.051 0 0 1 .015-.019c.084-.063.168-.129.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 0 1 .053.007c.08.066.164.132.248.195a.051.051 0 0 1-.004.085 8.254 8.254 0 0 1-1.249.594.05.05 0 0 0-.03.03.052.052 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.235 13.235 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612Z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h2>Шаг 2</h2>
+                                    <p>
+                                        Зайти в чат-сервис <a href="https://discord.com/channels/@me">Discord</a>,
+                                        создать webhook, и скопировать токен в конфигуратор
+                                        <code>Discord Server Webhooks</code>
+                                    </p>
+                                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#config">
+                                        Открыть конфигуратор
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col d-flex align-items-start">
+                                <div class="me-3">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h2>Шаг 3</h2>
+                                    <p>
+                                        Скопировать <code>url</code> с сайта Кинопоиск у <em class="text-muted">фильма / сериала / мультфильма / аниме</em>, вставить в поиск,
+                                        отформатировать текст и нажать на кнопку <code>Отправить</code>
+                                    </p>
+                                    <a href="#" class="btn btn-primary" 
+                                        onclick="document.getElementById('search-input').focus()">
+                                        Найти фильм
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <!-- / Основной контент -->
 
-                <!-- Демо страница фильма -->
-                <div class="container p-5" v-if="isDemo" id="demo">
+                <!-- Страница фильма -->
+                <div class="container p-5" key="filmPage" v-if="films">
                     <div class="row g-0 bg-light position-relative" :class="localdata.nightTheme ? 'bg-light text-light bg-opacity-10' : 'bg-light'">
                         <div class="col-md-4 mb-md-0 p-md-4">
-                            <img src="https://kinopoiskapiunofficial.tech/images/posters/kp/309.jpg" class="card-img-top">
+                            <img :src="films.posterUrl" class="card-img-top">
                         </div>
                         <div class="col-md-8 p-4 ps-md-0">
-                            <h4 class="mt-0">Эквилибриум</h4>
-                            <p>
-                                В будущем люди лишены возможности выражать эмоции. Это цена, которую человечество платит за
-                                устранение из своей жизни войны. Теперь книги, искусство и музыка находятся вне закона, а любое
-                                чувство — преступление, наказуемое смертью. Для приведения в жизнь существующего правила
-                                используется принудительное применение лекарства прозиум. Правительственный агент Джон Престон
-                                борется с теми, кто нарушает правила. В один прекрасный момент он забывает принять очередную
-                                дозу лекарства, и с ним происходит духовное преображение, что приводит его к конфликту не только
-                                с режимом, но и с самим собой.
-                            </p>
+                            <h4 class="mt-0">{{ films.nameRu }}</h4>
+                            <p>{{ films.description }}</p>
                             <table class="table" :class="localdata.nightTheme ? 'text-light' : null">
                                 <thead>
                                     <tr>
@@ -118,9 +307,9 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>2002</td>
-                                        <td>01:47 ч</td>
-                                        <td>боевик, драма, триллер, фантастика</td>
+                                        <td>{{ films.year }}</td>
+                                        <td>{{ filmLength }}</td>
+                                        <td>{{ genres }}</td>
                                         <td>
                                             <div class="form-check form-switch me-auto mb-2 mb-lg-0">
                                                 <input class="form-check-input" type="checkbox" checked
@@ -132,253 +321,66 @@
                             </table>
                             <div class="mb-3" v-if="isWatchNow">
                                 <label class="form-label">Ссылка для совместного просмотра</label>
-                                <input type="text" class="form-control">
+                                <input type="text" class="form-control" v-model="localdata.Together">
                             </div>
                             <div class="row g-0 position-relative">
                                 <div class="col-md-12 p-4 ps-md-0">
-                                    <label for="exampleFormControlTextarea1" class="form-label">Сообщение для
+                                    <label for="DiscordMessage" class="form-label">Сообщение для
                                         отправки</label>
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                                    <textarea class="form-control" id="DiscordMessage" rows="3"
                                         v-model="message"></textarea>
                                 </div>
                                 <div class="col-auto">
-                                    <button type="submit" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#AccessDenied">Отправить
+                                    <button type="submit" class="btn btn-primary mb-3" @click.prevent="sendFilm()">Отправить
                                         в Discord</button>
-                                        <button type="submit" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#AccessDenied">Смотреть онлайн</button>
-                                        <button type="submit" class="btn btn-outline-danger mb-3" @click="isDemo = false">Закрыть</button>
+                                    <button type="submit" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#WatchFilm">Смотреть онлайн</button>
+                                    <button type="submit" class="btn btn-outline-danger mb-3" @click.prevent="message = films = null">Отмена</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Нет доступа - окно -->
-                    <div class="modal fade" id="AccessDenied" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="AccessDeniedLabel" aria-hidden="true">
+                    <!-- WatchFilm Modal -->
+                    <div class="modal fade" id="WatchFilm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="WatchFilmLabel" aria-hidden="true">
                         <div class="modal-dialog modal-xl">
                             <div class="modal-content" :class="localdata.nightTheme ? 'bg-dark' : null">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="AccessDeniedLabel">Нет доступа =(</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <h5 class="modal-title" id="WatchFilmLabel">Просмотр фильма</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click.prevent="closeFrame()"></button>
                                 </div>
-                                <div class="modal-body" style="max-height: 500px">
-                                    <div class="alert alert-danger" role="alert">
-                                        Нет доступна к функции в режиме демо
+                                <div class="modal-body">
+                                    <div class="ratio ratio-21x9" v-if="localdata.agree">
+                                        <iframe id="watchFrame" :src="filmLink" allowfullscreen></iframe>
                                     </div>
+
+                                    <div class="alert alert-danger mb-0" role="alert" v-if="!localdata.agree">
+                                        <h4 class="alert-heading">Внимание!</h4>
+                                        <p>
+                                            Конкретный сайт собирает информацию о фильмах / сериалах / мультфильмах / аниме 
+                                            из открытых источников и хранит их в кеше браузера. 
+                                            Любой видеоконтент предоставляется из сторонних источников, к которым разработчик сайта 
+                                            не имеет абсолютно никакого отношения. 
+                                        </p>
+                                        <hr>
+                                        <div class="form-check">
+                                            <input v-model="localdata.agree" class="form-check-input" type="checkbox" :value="localdata.agree" id="agree">
+                                            <label class="form-check-label h-3" for="agree">
+                                                Я согласен с предупреждением выше
+                                            </label>
+                                        </div>
+                                    </div>                                
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                                    <button class="btn btn-primary" disabled>Открыть в новой вкладке</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click.prevent="closeFrame()">Закрыть</button>
+                                    <a :href="filmLink" target="_blank" class="btn btn-primary" v-if="localdata.agree">Открыть в новой вкладке</a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- / Нет доступа - окно -->
+                    <!-- / WatchFilm Modal -->
                 </div>
-                <!-- / Демо страница фильма -->
-
-                <div class="row p-5" v-if="!isDemo">
-
-                    <!-- Отображение истории фильмов -->
-                    <div class="gy-4" v-for="(item, index) in localdata.historyItems">
-                        <div class="row g-0 position-relative rounded" :class="localdata.nightTheme ? 'bg-light text-light bg-opacity-10' : 'bg-light'">
-                            <div class="col-xl-2 col-md-4 mb-md-0 p-md-4">
-                                <img :src="item.poster" class="w-100 rounded">
-                            </div>
-                            <div class="col-xl-10 col-md-8 p-4 ps-md-0">
-                                <div class="d-lg-flex justify-content-between">
-                                    <h4 class="mt-0">{{ item.name }}</h4>
-
-                                    <small class="text-muted">
-                                        <span class="badge bg-success" v-if="item.status == 'success'">Отправлен</span>
-                                        <span class="badge bg-danger" v-if="item.status == 'closed'">Не отправлен</span>
-                                        {{ item.time }}
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="currentColor" class="bi bi-alarm" viewBox="0 0 16 16">
-                                            <path
-                                                d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9V5.5z" />
-                                            <path
-                                                d="M6.5 0a.5.5 0 0 0 0 1H7v1.07a7.001 7.001 0 0 0-3.273 12.474l-.602.602a.5.5 0 0 0 .707.708l.746-.746A6.97 6.97 0 0 0 8 16a6.97 6.97 0 0 0 3.422-.892l.746.746a.5.5 0 0 0 .707-.708l-.601-.602A7.001 7.001 0 0 0 9 2.07V1h.5a.5.5 0 0 0 0-1h-3zm1.038 3.018a6.093 6.093 0 0 1 .924 0 6 6 0 1 1-.924 0zM0 3.5c0 .753.333 1.429.86 1.887A8.035 8.035 0 0 1 4.387 1.86 2.5 2.5 0 0 0 0 3.5zM13.5 1c-.753 0-1.429.333-1.887.86a8.035 8.035 0 0 1 3.527 3.527A2.5 2.5 0 0 0 13.5 1z" />
-                                        </svg>
-                                    </small>
-                                </div>
-                                <p>{{ item.description.substr(0, 1000) + "..." }}</p>
-                                <div class="d-lg-flex justify-content-between">
-                                    <div class="col">
-                                        <a :href="item.webUrl" class="btn btn-primary mb-2">На страницу фильма</a>
-                                        <button class="btn btn-primary mb-2" @click="researchFilm(item.webUrl)"
-                                            :disabled="localdata.Kinopoisk.item == null || localdata.Kinopoisk.item == '' ? true : false">Повторить
-                                            поиск</button>
-                                    </div>
-                                    <a class="btn btn-danger mb-2" @click="removeHistoryItem(index)">Удалить <svg
-                                            xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                            <path
-                                                d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                                            <path fill-rule="evenodd"
-                                                d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- / Отображение истории фильмов -->
-                </div>
-
-                <div class="container px-4 py-5" id="instruction">
-                    <h2 class="pb-2 border-bottom">Что требуется для работы веб-приложения?</h2>
-                    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
-                        <div class="col d-flex align-items-start">
-                            <div class="me-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-film" viewBox="0 0 16 16">
-                                    <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V1zm4 0v6h8V1H4zm8 8H4v6h8V9zM1 1v2h2V1H1zm2 3H1v2h2V4zM1 7v2h2V7H1zm2 3H1v2h2v-2zm-2 3v2h2v-2H1zM15 1h-2v2h2V1zm-2 3v2h2V4h-2zm2 3h-2v2h2V7zm-2 3v2h2v-2h-2zm2 3h-2v2h2v-2z"/>
-                                  </svg>
-                            </div>
-                            <div>
-                                <h2>Шаг 1</h2>
-                                <p>
-                                    Перейти в личный кабинет <a href="https://kinopoiskapiunofficial.tech">Kinopoisk Api
-                                        Unofficial</a>, и скопировать токен в конфигуратор
-                                    <code>Kinopoisk Api Unofficial</code>
-                                </p>
-                                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#config">
-                                    Открыть конфигуратор
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col d-flex align-items-start">
-                            <div class="me-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-discord" viewBox="0 0 16 16">
-                                    <path d="M13.545 2.907a13.227 13.227 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.833.051.051 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.041.041 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.276 13.276 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.01-.059.051.051 0 0 0-.018-.011 8.875 8.875 0 0 1-1.248-.595.05.05 0 0 1-.02-.066.051.051 0 0 1 .015-.019c.084-.063.168-.129.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 0 1 .053.007c.08.066.164.132.248.195a.051.051 0 0 1-.004.085 8.254 8.254 0 0 1-1.249.594.05.05 0 0 0-.03.03.052.052 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.235 13.235 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612Z"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <h2>Шаг 2</h2>
-                                <p>
-                                    Зайти в чат-сервис <a href="https://discord.com/channels/@me">Discord</a>,
-                                    создать webhook, и скопировать токен в конфигуратор
-                                    <code>Discord Server Webhooks</code>
-                                </p>
-                                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#config">
-                                    Открыть конфигуратор
-                                </a>
-                            </div>
-                        </div>
-                        <div class="col d-flex align-items-start">
-                            <div class="me-3">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                                </svg>
-                            </div>
-                            <div>
-                                <h2>Шаг 3</h2>
-                                <p>
-                                    Скопировать <code>url</code> с сайта Кинопоиск у <em class="text-muted">фильма / сериала / мультфильма / аниме</em>, вставить в поиск,
-                                    отформатировать текст и нажать на кнопку <code>Отправить</code>
-                                </p>
-                                <a href="#" class="btn btn-primary" 
-                                    onclick="document.getElementById('search-input').focus()">
-                                    Найти фильм
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- / Основной контент -->
-
-            <!-- Страница фильма -->
-            <div class="container p-5" v-if="films">
-                <div class="row g-0 bg-light position-relative" :class="localdata.nightTheme ? 'bg-light text-light bg-opacity-10' : 'bg-light'">
-                    <div class="col-md-4 mb-md-0 p-md-4">
-                        <img :src="films.posterUrl" class="card-img-top">
-                    </div>
-                    <div class="col-md-8 p-4 ps-md-0">
-                        <h4 class="mt-0">{{ films.nameRu }}</h4>
-                        <p>{{ films.description }}</p>
-                        <table class="table" :class="localdata.nightTheme ? 'text-light' : null">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Год</th>
-                                    <th scope="col">Длительность</th>
-                                    <th scope="col">Жанр</th>
-                                    <th scope="col">Смотрим сейчас?</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{{ films.year }}</td>
-                                    <td>{{ filmLength }}</td>
-                                    <td>{{ genres }}</td>
-                                    <td>
-                                        <div class="form-check form-switch me-auto mb-2 mb-lg-0">
-                                            <input class="form-check-input" type="checkbox" checked
-                                                v-model="isWatchNow">
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="mb-3" v-if="isWatchNow">
-                            <label class="form-label">Ссылка для совместного просмотра</label>
-                            <input type="text" class="form-control" v-model="localdata.Together">
-                        </div>
-                        <div class="row g-0 position-relative">
-                            <div class="col-md-12 p-4 ps-md-0">
-                                <label for="DiscordMessage" class="form-label">Сообщение для
-                                    отправки</label>
-                                <textarea class="form-control" id="DiscordMessage" rows="3"
-                                    v-model="message"></textarea>
-                            </div>
-                            <div class="col-auto">
-                                <button type="submit" class="btn btn-primary mb-3" @click.prevent="sendFilm()">Отправить
-                                    в Discord</button>
-                                <button type="submit" class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#WatchFilm">Смотреть онлайн</button>
-                                <button type="submit" class="btn btn-outline-danger mb-3" @click.prevent="message = films = null">Отмена</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- WatchFilm Modal -->
-                <div class="modal fade" id="WatchFilm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="WatchFilmLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-xl">
-                        <div class="modal-content" :class="localdata.nightTheme ? 'bg-dark' : null">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="WatchFilmLabel">Просмотр фильма</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click.prevent="closeFrame()"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="ratio ratio-21x9" v-if="localdata.agree">
-                                    <iframe id="watchFrame" :src="filmLink" allowfullscreen></iframe>
-                                </div>
-
-                                <div class="alert alert-danger mb-0" role="alert" v-if="!localdata.agree">
-                                    <h4 class="alert-heading">Внимание!</h4>
-                                    <p>
-                                        Конкретный сайт собирает информацию о фильмах / сериалах / мультфильмах / аниме 
-                                        из открытых источников и хранит их в кеше браузера. 
-                                        Любой видеоконтент предоставляется из сторонних источников, к которым разработчик сайта 
-                                        не имеет абсолютно никакого отношения. 
-                                    </p>
-                                    <hr>
-                                    <div class="form-check">
-                                        <input v-model="localdata.agree" class="form-check-input" type="checkbox" :value="localdata.agree" id="agree">
-                                        <label class="form-check-label h-3" for="agree">
-                                            Я согласен с предупреждением выше
-                                        </label>
-                                    </div>
-                                  </div>                                
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click.prevent="closeFrame()">Закрыть</button>
-                                <a :href="filmLink" target="_blank" class="btn btn-primary" v-if="localdata.agree">Открыть в новой вкладке</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- / WatchFilm Modal -->
-            </div>
-            <!-- / Страница фильма -->
+                <!-- / Страница фильма -->
+            </transition>
         </section>
         <!-- / Главная страница -->
 
