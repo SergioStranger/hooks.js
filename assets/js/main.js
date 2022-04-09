@@ -1,11 +1,25 @@
+import Vue from './vue.esm.browser.js'
+
+const kinopoiskApiHost = 'https://kinopoiskapiunofficial.tech/api/v2.2/films/'
+
+// Библиотека уведомлений
 const notyf = new Notyf({
-    duration: 5000,
+    duration: 1500,
     position: {
         x: 'center',
         y: 'top',
     },
-    dismissible: true
+    dismissible: false,
+    types: [
+        {
+            type: 'error',
+            duration: 4500,
+            dismissible: true
+        }
+    ]
 })
+
+// Сам Vue
 const app = new Vue({
     el: "#app",
     data: {
@@ -72,6 +86,9 @@ const app = new Vue({
         },
         'localdata.agree': function(newItem) {
             localStorage.agree = newItem
+        },
+        'localdata.historyItems': function (newHistory) {
+            localStorage.userHistory = JSON.stringify(newHistory)
         }
     },
     computed: {
@@ -91,15 +108,13 @@ const app = new Vue({
             }
             return str.trimEnd()
         },
-        slogan: function() {
-            return this.films.slogan != null ? this.films.slogan : 'без слогана'
-        },
         watchLink: function() {
-            if (this.isWatchNow && this.localdata.Together){
-                if(this.localdata.Together.indexOf('https://') != -1) 
-                    return `[:eyes: ┋ Подключиться к совместному каналу для просмотра](${this.localdata.Together}) \n [:page_with_curl: ┋ Перейти на сайт для просмотра](${this.films.webUrl})`
-            }
-            return `[:page_with_curl: ┋ Перейти на сайт для просмотра](${this.films.webUrl})`
+            let links = `[:page_with_curl: ┋ Перейти на Кинопоиск](${this.films.webUrl})`
+            if (this.isWatchNow && this.localdata.Together && this.localdata.Together.indexOf('https://') !== -1)
+                return links + `
+                        [:eyes: ┋ Подключиться к совместному каналу для просмотра](${this.localdata.Together}) \n 
+                    `
+            return links
         },
         filmLength: function() {
             let length = this.films.filmLength
@@ -120,152 +135,180 @@ const app = new Vue({
         }
     },
     methods: {
-        async getFilm() {
-            if (this.url === '') {
+        /**
+         * Получаем фильм с Kinopoisk
+         * @param url
+         * @returns {Promise<void>}
+         */
+        async getFilm(url) {
+            if (url === '') {
                 notyf.error('Поле не должно оставаться пустым!')
-            } else if (typeof (this.url) != 'number') {
-                this.url = parseInt(this.url.replace(/\D+/g, ''))
+            } else if (url.indexOf('https://www.kinopoisk.ru/') === 0) {
+                url = parseInt(url.replace(/\D+/g, ''))
+            } else if (isNaN(parseInt(url))) {
+                notyf.error('Неправильный запрос')
+                url = ''
             }
 
-            if (typeof(this.url) == 'number') {
-                await fetch('https://kinopoiskapiunofficial.tech/api/v2.2/films/' + this.url, {
+            if (url !== '') {
+                try {
+                    let response = await fetch(kinopoiskApiHost + url, {
                         method: 'GET',
                         headers: {
                             'accept': 'application/json',
                             'X-API-KEY': this.localdata.Kinopoisk.item
                         }
                     })
-                    .then(res => {
-                        switch(res.status) {
-                            case 200:
-                                notyf.success('Запрос выполнен успешно')
-                                break;
-                            case 401:
-                                notyf.error('Пустой или неправильный токен')
-                                break;
-                            case 404:
-                                notyf.error('Фильм не найден')
-                                break;
-                            case 429:
-                                notyf.error('Слишком много запросов. Общий лимит - 20 запросов в секунду')
-                            default:
-                                notyf.error('Не самый удачный запрос')
-                                break;
-                        }
-                        return res.json()
-                    })
-                    .then(data => this.films = data)
 
-                if(this.films.kinopoiskId) {
-                    this.filmLink = 'https://www.sspoisk.ru/series/' + this.films.kinopoiskId
-                } else {
-                    this.films = null
+                    switch(response.status) {
+                        case 200:
+                            notyf.success('Запрос выполнен успешно')
+                            this.films = await response.json()
+                            break
+                        case 400:
+                            notyf.error('Неправильный запрос')
+                            break
+                        case 401:
+                            notyf.error('Пустой или неправильный токен')
+                            break
+                        case 404:
+                            notyf.error('Фильм не найден')
+                            break
+                        case 429:
+                            notyf.error('Слишком много запросов. Общий лимит - 20 запросов в секунду')
+                            break
+                        default:
+                            let error = await response.json();
+                            notyf.error('Непонятная ошибка, подробнее в консоли')
+                            console.log('%cОшибка: ', 'font-size: 32px; color: #ed3d3d; font-family: Impact; text-shadow: 2px 4px 4px #000;')
+                            console.log('%c' + error['message'], 'font-size: 14px; font-family: Verdana;')
+                            break
+                    }
+                } catch (err) {
+                    notyf.error('Запрос не выполнен, подробнее в консоли')
+                    console.log('%cОшибка: ', 'font-size: 32px; color: #ed3d3d; font-family: Impact; text-shadow: 2px 4px 4px #000;')
+                    console.log('%c' + err['message'], 'font-size: 14px; font-family: Verdana;')
                 }
             }
         },
+
+        /**
+         * Отправление полученного фильма по hook в Discord
+         * @returns {Promise<void>}
+         */
         async sendFilm() {
-            await fetch(this.localdata.Discord.item, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    "username": "Kuнoмaнuя NEWS",
-                    "content": this.message,
-                    "embeds": [{
-                        "title": this.films.nameRu + " (" + this.films.year + ")",
-                        "color": 3368703,
-                        "description": "",
-                        "timestamp": null,
-                        "url": this.films.webUrl,
-                        "author": {
-                            "name": "Kuнoмaнuя NEWS",
-                            "url": "https://sergios.fun/"
-                        },
-                        "image": {
-                            "url": this.films.posterUrl
-                        },
-                        "thumbnail": {
-                            "url": this.films.posterUrl
-                        },
-                        "footer": {
-                            "text": this.ratingAgeLimits + "Длительность: " + this.filmLength,
-                            "icon_url": "https://lh6.ggpht.com/S6_A7lzx3EfpKSBKm1Kg0N5IlHGgeja5Lb_CpPzWTB87cIsmKd70cl5GlL961ST4L9A"
-                        },
-                        "fields": [{
+            try {
+                let response = await fetch(this.localdata.Discord.item, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        "content": this.message,
+                        "embeds": [{
+                            "title": this.films.nameRu + ` (${this.films.year})`,
+                            "color": 3368703,
+                            "description": "",
+                            "timestamp": null,
+                            "url": this.films.webUrl,
+                            "image": {
+                                "url": this.films.posterUrl
+                            },
+                            "thumbnail": {
+                                "url": this.films.posterUrl
+                            },
+                            "footer": {
+                                "text": this.ratingAgeLimits + `Длительность: ${this.filmLength}`,
+                                "icon_url": "https://lh6.ggpht.com/S6_A7lzx3EfpKSBKm1Kg0N5IlHGgeja5Lb_CpPzWTB87cIsmKd70cl5GlL961ST4L9A"
+                            },
+                            "fields": [{
                                 "name": "Слоган:",
-                                "value": this.slogan,
+                                "value": this.films.slogan != null ? this.films.slogan : 'без слогана',
                                 "inline": true
                             },
-                            {
-                                "name": ":film_frames: Жанр:",
-                                "value": this.genres,
-                                "inline": true
-                            },
-                            {
-                                "name": ":book: Описание сюжета:",
-                                "value": this.description,
-                                "inline": false
-                            },
-                            {
-                                "name": ":link: Ссылка на просмотр",
-                                "value": this.watchLink,
-                                "inline": false
-                            },
-                            {
-                                "name": ":map: Страна:",
-                                "value": this.countries,
-                                "inline": true
-                            },
-                            {
-                                "name": ":flag_ru: Рейтинг Кинопоиск:",
-                                "value": String(this.films.ratingKinopoisk),
-                                "inline": true
-                            },
-                            {
-                                "name": ":flag_us: Рейтинг IMDb:",
-                                "value": String(this.films.ratingImdb),
-                                "inline": true
-                            },
-                        ]
-                    }]
+                                {
+                                    "name": ":film_frames: Жанр:",
+                                    "value": this.genres,
+                                    "inline": true
+                                },
+                                {
+                                    "name": ":book: Описание сюжета:",
+                                    "value": this.description,
+                                    "inline": false
+                                },
+                                {
+                                    "name": ":link: Ссылка на просмотр",
+                                    "value": this.watchLink,
+                                    "inline": false
+                                },
+                                {
+                                    "name": ":map: Страна:",
+                                    "value": this.countries,
+                                    "inline": true
+                                },
+                                {
+                                    "name": ":flag_ru: Рейтинг Кинопоиск:",
+                                    "value": this.films.ratingKinopoisk ? String(this.films.ratingKinopoisk) : 'нет данных',
+                                    "inline": true
+                                },
+                                {
+                                    "name": ":flag_us: Рейтинг IMDb:",
+                                    "value": this.films.ratingImdb ? String(this.films.ratingImdb) : 'нет данных',
+                                    "inline": true
+                                },
+                            ]
+                        }]
+                    })
                 })
-            })
-            .then(data => responce = data)
 
-            switch(responce['status']) {
-                case 204:
-                    notyf.success('Данные успешно отправленны!')
-                    // Вызываем функцию очистки полей
-                    this.saveHistory('success')
-                    break
-                case 401:
-                    notyf.error('Неверный токен Discord!')
-                    break
-                case 400:
-                    notyf.error('Данные невозможно отправить! Обратитесь к разработчику сайта')
-                    break
-                case 405:
-                    notyf.error('Не верно указан токен Discord!')
-                    break
-                default:
-                    notyf.error('Призошла неизвестная ошибка! Обратитесь к разработчику сайта')
-                    break
-            }
+                switch (response.status) {
+                    case 204:
+                        notyf.success('Данные успешно отправленны!')
+                        // Сохраняем в историю
+                        this.saveHistory('success')
+                        break
+                    case 401:
+                        notyf.error('Неверный токен Discord!')
+                        break
+                    case 400:
+                        notyf.error('Данные невозможно отправить!')
+                        break
+                    case 405:
+                        notyf.error('Не верно указан токен Discord!')
+                        break
+                    default:
+                        let error = await response.json();
+                        notyf.error('Непонятная ошибка, подробнее в консоли')
+                        console.log('%cОшибка: ', 'font-size: 32px; color: #ed3d3d; font-family: Impact; text-shadow: 2px 4px 4px #000;')
+                        console.log('%c' + error['message'], 'font-size: 14px; font-family: Verdana;')
+                        break
+                }
 
-            if(responce['status'] !== 204) {
-                this.saveHistory('closed')
-            }
-
-            if(this.localdata.Together) {
-                localStorage.setItem('TogetherURL', this.localdata.Together)
+                if (!response.ok) {
+                    this.saveHistory('closed')
+                }
+            } catch (err) {
+                notyf.error('Запрос не выполнен, подробнее в консоли')
+                console.log('%cОшибка: ', 'font-size: 32px; color: #ed3d3d; font-family: Impact; text-shadow: 2px 4px 4px #000;')
+                console.log('%c' + err['message'], 'font-size: 14px; font-family: Verdana;')
             }
         },
         saveHistory(status) {
-            let now = new Date()
-            let timestamp = now.toLocaleTimeString().concat(" " + now.toLocaleDateString())
+            // Создаем Timestapms
+            let date = new Date()
+            let nowTime = date.toLocaleString('ru', {
+                hour: 'numeric',
+                minute: 'numeric'
+            })
+            let nowDate = date.toLocaleString('ru', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            })
+            let timestamp = `${nowTime} - ${nowDate}`
 
-            let item = {
+            // Формируем элемент
+            let history = {
                 'name': this.films.nameRu + ' (' + this.films.year + ')',
                 'poster': this.films.posterUrl,
                 'description': this.films.description,
@@ -274,26 +317,20 @@ const app = new Vue({
                 'time': timestamp
             }
 
-            this.localdata.historyItems.unshift(item)
+            // Записываем его в историю
+            this.localdata.historyItems.unshift(history)
 
-            localStorage.userHistory = JSON.stringify(this.localdata.historyItems)
-
-            // Очистка полей
+            // Удаляем данные
             this.message = this.films = null
         },
         removeHistoryItem(item) {
             this.localdata.historyItems.splice(item, 1)
-            localStorage.userHistory = JSON.stringify(this.localdata.historyItems)
         },
         cleanHistory() {
             if(confirm('Вся история фильмов будет очищенна, продолжить?')) {
                 localStorage.removeItem('userHistory')
                 location.reload()
             }
-        },
-        researchFilm(url) {
-            this.url = url
-            this.getFilm()
         },
         devTool() {
             if(confirm('Вся история фильмов будет очищенна и замененна на стандартный набор, продолжить?')) {
@@ -346,11 +383,13 @@ const app = new Vue({
         closeFrame() {
             if(document.getElementById("watchFrame")) {
                 let frame = document.getElementById("watchFrame");
-                frame.src = frame.src;
+                // Перезагрузка фрейма
+                frame.src = frame.src.replace('http:', '')
             }
         }
     }
 })
 
+// Кастомное сообщение в логах, при открытии консоли
 console.log("%cДобро пожаловать в логи", "font-size: 64px; color: #eee; font-family: Impact; text-shadow: 2px 4px 4px #000;")
 console.log("%chttps://github.com/SergioStrangeS", "font-size: 18px; color: #0d6efd; font-family: Verdana;")

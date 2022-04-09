@@ -26,7 +26,9 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <div class="form-check form-switch me-auto mb-2 mb-lg-0">
-                        <input class="form-check-input" type="checkbox" checked v-model="localdata.nightTheme">
+                        <label>
+                            <input class="form-check-input" type="checkbox" checked v-model="localdata.nightTheme">
+                        </label>
                     </div>
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
@@ -50,11 +52,11 @@
                         </li>
                     </ul>
                     <form class="d-flex">
-                        <input class="form-control me-2" type="search" placeholder="Кинопоиск ID" aria-label="Search"
+                        <input class="form-control me-2" type="search" placeholder="Кинопоиск URL" aria-label="Search"
                             v-model="url" id="search-input">
                         <button class="btn btn-success" type="submit"
-                            :disabled="localdata.Kinopoisk.item == null || localdata.Kinopoisk.item == '' ? true : false"
-                            @click.prevent="getFilm()">Поиск</button>
+                            :disabled="localdata.Kinopoisk.item == null || localdata.Kinopoisk.item === ''"
+                            @click.prevent="getFilm(url)">Поиск</button>
                     </form>
                 </div>
             </div>
@@ -79,14 +81,12 @@
                                 <a href="#demo" class="btn btn-outline-success btn-lg px-4" @click="isDemo = true">Демо</a>
                             </div>
                         </div>
-                        <div class="overflow-hidden" style="max-height: 30vh;">
+                        <div class="overflow-hidden" style="max-height: 50vh;">
                             <div class="container px-5">
                                 <img src="assets/images/image.png" v-if="!localdata.nightTheme"
-                                    class="img-fluid border rounded-3 shadow-lg mb-4" alt="Single page - light" loading="lazy"
-                                    width="700" height="500">
+                                     class="img-fluid border rounded-3 shadow-lg mb-4" alt="Single page - light" loading="lazy">
                                 <img src="assets/images/image-dark.png" v-if="localdata.nightTheme"
-                                    class="img-fluid border rounded-3 shadow-lg mb-4" alt="Single page - dark" loading="lazy"
-                                    width="700" height="500">
+                                    class="img-fluid border rounded-3 shadow-lg mb-4" alt="Single page - dark" loading="lazy">
                             </div>
                         </div>
                     </div>
@@ -95,7 +95,7 @@
                     <div class="container p-5" v-if="isDemo" id="demo">
                         <div class="row g-0 bg-light position-relative" :class="localdata.nightTheme ? 'bg-light text-light bg-opacity-10' : 'bg-light'">
                             <div class="col-md-4 mb-md-0 p-md-4">
-                                <img src="https://kinopoiskapiunofficial.tech/images/posters/kp/309.jpg" class="card-img-top">
+                                <img src="https://kinopoiskapiunofficial.tech/images/posters/kp/309.jpg" class="card-img-top" alt="kp-poster">
                             </div>
                             <div class="col-md-8 p-4 ps-md-0">
                                 <h4 class="mt-0">Эквилибриум</h4>
@@ -124,8 +124,10 @@
                                             <td>боевик, драма, триллер, фантастика</td>
                                             <td>
                                                 <div class="form-check form-switch me-auto mb-2 mb-lg-0">
-                                                    <input class="form-check-input" type="checkbox" checked
-                                                        v-model="isWatchNow">
+                                                    <label>
+                                                        <input class="form-check-input" type="checkbox" checked
+                                                            v-model="isWatchNow">
+                                                    </label>
                                                 </div>
                                             </td>
                                         </tr>
@@ -182,15 +184,15 @@
                         <div class="gy-4" v-for="(item, index) in localdata.historyItems">
                             <div class="row g-0 position-relative rounded" :class="localdata.nightTheme ? 'bg-light text-light bg-opacity-10' : 'bg-light'">
                                 <div class="col-xl-2 col-md-4 mb-md-0 p-md-4">
-                                    <img :src="item.poster" class="w-100 rounded">
+                                    <img :src="item.poster" class="w-100 rounded" alt="poster">
                                 </div>
                                 <div class="col-xl-10 col-md-8 p-4 ps-md-0">
                                     <div class="d-lg-flex justify-content-between">
                                         <h4 class="mt-0">{{ item.name }}</h4>
 
                                         <small class="text-muted">
-                                            <span class="badge bg-success" v-if="item.status == 'success'">Отправлен</span>
-                                            <span class="badge bg-danger" v-if="item.status == 'closed'">Не отправлен</span>
+                                            <span class="badge bg-success" v-if="item.status === 'success'">Отправлен</span>
+                                            <span class="badge bg-danger" v-if="item.status === 'closed'">Не отправлен</span>
                                             {{ item.time }}
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                 fill="currentColor" class="bi bi-alarm" viewBox="0 0 16 16">
@@ -204,9 +206,9 @@
                                     <p>{{ item.description.substr(0, 1000) + "..." }}</p>
                                     <div class="d-lg-flex justify-content-between">
                                         <div class="col">
-                                            <a :href="item.webUrl" class="btn btn-primary mb-2">На страницу фильма</a>
-                                            <button class="btn btn-primary mb-2" @click="researchFilm(item.webUrl)"
-                                                :disabled="localdata.Kinopoisk.item == null || localdata.Kinopoisk.item == '' ? true : false">Повторить
+                                            <a :href="item.webUrl" target="_blank" class="btn btn-primary mb-2">На страницу фильма</a>
+                                            <button class="btn btn-primary mb-2" @click="getFilm(item.webUrl)"
+                                                :disabled="localdata.Kinopoisk.item == null || localdata.Kinopoisk.item === ''">Повторить
                                                 поиск</button>
                                         </div>
                                         <a class="btn btn-danger mb-2" @click="removeHistoryItem(index)">Удалить <svg
@@ -225,6 +227,7 @@
                         <!-- / Отображение истории фильмов -->
                     </div>
 
+                    <!-- Инструкция -->
                     <div class="container px-4 py-5" id="instruction">
                         <h2 class="pb-2 border-bottom">Что требуется для работы веб-приложения?</h2>
                         <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
@@ -291,7 +294,7 @@
                 <div class="container p-5" key="filmPage" v-if="films">
                     <div class="row g-0 bg-light position-relative" :class="localdata.nightTheme ? 'bg-light text-light bg-opacity-10' : 'bg-light'">
                         <div class="col-md-4 mb-md-0 p-md-4">
-                            <img :src="films.posterUrl" class="card-img-top">
+                            <img :src="films.posterUrl" class="card-img-top" alt="poster">
                         </div>
                         <div class="col-md-8 p-4 ps-md-0">
                             <h4 class="mt-0">{{ films.nameRu }}</h4>
@@ -350,7 +353,8 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="ratio ratio-21x9" v-if="localdata.agree">
-                                        <iframe id="watchFrame" :src="filmLink" allowfullscreen></iframe>
+<!--                                        <iframe id="watchFrame" :src="filmLink" allowfullscreen></iframe>-->
+                                        <iframe id="watchFrame" :src="'https://95.svetacdn.in/s44jAOvJ6Q1T?kp_id=' + films.kinopoiskId" allowfullscreen></iframe>
                                     </div>
 
                                     <div class="alert alert-danger mb-0" role="alert" v-if="!localdata.agree">
@@ -408,8 +412,8 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Discord Server Webhooks</label>
-                            <input :type="localdata.Discord.show ? 'text' : 'password'" v-model="localdata.Discord.item"
+                            <label for="discordToken" class="form-label">Discord Server Webhooks</label>
+                            <input id="discordToken" :type="localdata.Discord.show ? 'text' : 'password'" v-model="localdata.Discord.item"
                                 class="form-control">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" value="true" id="Discord"
@@ -451,10 +455,9 @@
         <!-- / Конфигуратор -->
     </div>
 
-    <script src="assets/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/js/notyf.min.js"></script>
-    <script src="assets/js/vue.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script src="./assets/js/bootstrap.bundle.min.js"></script>
+    <script src="./assets/js/notyf.min.js"></script>
+    <script src="./assets/js/main.js" type="module"></script>
 </body>
 
 </html>
