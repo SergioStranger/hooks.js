@@ -1,3 +1,5 @@
+import Vue from './vue.esm.browser.js'
+
 const kinopoiskApiHost = 'https://kinopoiskapiunofficial.tech/api/v2.2/films/'
 
 // Библиотека уведомлений
@@ -189,6 +191,7 @@ const app = new Vue({
                 }
             }
         },
+
         /**
          * Отправление полученного фильма по hook в Discord
          * @returns {Promise<void>}
@@ -201,7 +204,6 @@ const app = new Vue({
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        "username": "Kuнoмaнuя NEWS",
                         "content": this.message,
                         "embeds": [{
                             "title": this.films.nameRu + ` (${this.films.year})`,
@@ -209,10 +211,6 @@ const app = new Vue({
                             "description": "",
                             "timestamp": null,
                             "url": this.films.webUrl,
-                            "author": {
-                                "name": "Kuнoмaнuя NEWS",
-                                "url": "https://sergios.fun/"
-                            },
                             "image": {
                                 "url": this.films.posterUrl
                             },
