@@ -20,7 +20,7 @@ const notyf = new Notyf({
 })
 
 // Сам Vue
-const app = new Vue({
+let app = new Vue({
     el: "#app",
     data: {
         page: 'index',
@@ -94,7 +94,7 @@ const app = new Vue({
     computed: {
         genres: function() {
             let str = ''
-            for (genre in app.films.genres) {
+            for (let genre in app.films.genres) {
                 genre > 0 ? str += ", " : false
                 str += app.films.genres[genre]['genre']
             }
@@ -102,7 +102,7 @@ const app = new Vue({
         },
         countries: function() {
             let str = ''
-            for (country in app.films.countries) {
+            for (let country in app.films.countries) {
                 country > 0 ? str += ", " : false
                 str += app.films.countries[country]['country']
             }
