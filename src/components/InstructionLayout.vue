@@ -10,9 +10,7 @@
             <p>
               Перейти в личный кабинет <a href="https://kinopoiskapiunofficial.tech">Kinopoisk Api Unofficial</a> и скопировать токен в настройки
             </p>
-            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#config">
-              Перейти в настройки
-            </a>
+            <router-link class="btn btn-primary" to="/config">Перейти в настройки</router-link>
           </div>
         </div>
         <div class="col d-flex align-items-start">
@@ -22,9 +20,7 @@
               Зайти в приложение <a href="https://discord.com/channels/@me">Discord</a>,
               создать <a href="https://support.discord.com/hc/ru/articles/228383668">вебхук</a> и скопировать его в настройки
             </p>
-            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#config">
-              Перейти в настройки
-            </a>
+            <router-link class="btn btn-primary" to="/config">Перейти в настройки</router-link>
           </div>
         </div>
         <div class="col d-flex align-items-start">
@@ -34,7 +30,7 @@
               Скопировать с сайта Кинопоиск <code>url</code> <strong>фильма / сериала / мультфильма /
                 аниме</strong> и вставить в <code>Поиск</code>
             </p>
-            <a href="#" class="btn btn-primary" onclick="document.getElementById('search-input').focus()">
+            <a class="btn btn-primary" onclick="document.getElementById('search-input').focus()">
               Найти фильм
             </a>
           </div>

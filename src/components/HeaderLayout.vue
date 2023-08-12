@@ -34,7 +34,7 @@
                 </ul>
                 <form class="d-flex">
                     <div class="input-group">
-                        <input class="form-control" type="search" placeholder="Кинопоиск ID" aria-label="Search" id="search-input">
+                        <input class="form-control" type="search" placeholder="Кинопоиск ID" aria-label="Search" id="search-input" v-model="KpID">
                         <button class="btn btn-success" type="submit"><i class="bi bi-search"></i> Поиск</button>
                     </div>
                 </form>
@@ -47,7 +47,8 @@
 export default {
     data() {
         return {
-            nightTheme: localStorage.nightTheme ? JSON.parse(localStorage.nightTheme) : false
+            nightTheme: localStorage.nightTheme ? JSON.parse(localStorage.nightTheme) : false,
+            KpID: ''
         }
     },
     watch: {
