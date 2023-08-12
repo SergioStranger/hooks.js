@@ -1,8 +1,8 @@
 <template>
-    <nav class="navbar navbar-expand-lg border-bottom"
+    <nav class="navbar navbar-expand-lg border-bottom sticky-md-top"
         :class="nightTheme ? 'navbar-dark bg-dark border-secondary' : 'navbar-light bg-light'">
         <div class="container">
-            <a class="navbar-brand" href="#">HOOKS.js</a>
+            <router-link to="/" class="navbar-brand">HOOKS.js</router-link>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
                 aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -13,10 +13,10 @@
                 </div>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="#">Главная</a>
+                        <router-link to="/" class="nav-link">Главная</router-link>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="#">Конфигуратор</a>
+                        <router-link to="/config" class="nav-link">Настройки</router-link>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
@@ -33,9 +33,10 @@
                     </li>
                 </ul>
                 <form class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Кинопоиск ID" aria-label="Search"
-                        id="search-input">
-                    <button class="btn btn-success" type="submit">Поиск</button>
+                    <div class="input-group">
+                        <input class="form-control" type="search" placeholder="Кинопоиск ID" aria-label="Search" id="search-input">
+                        <button class="btn btn-success" type="submit"><i class="bi bi-search"></i> Поиск</button>
+                    </div>
                 </form>
             </div>
         </div>

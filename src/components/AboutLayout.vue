@@ -12,12 +12,12 @@
           <a href="#demo" class="btn btn-outline-success btn-lg px-4">Демо</a>
         </div>
       </div>
-      <div class="overflow-hidden" style="max-height: 30vh;">
+      <div class="overflow-hidden" style="max-height: 50vh;">
         <div class="container px-5">
           <img src="../assets/images/image.png" class="img-fluid border rounded-3 shadow-lg mb-4"
-            alt="Single page - light" loading="lazy" width="700" height="500">
-          <img src="../assets/images/image-dark.png" class="img-fluid border rounded-3 shadow-lg mb-4"
-            alt="Single page - dark" loading="lazy" width="700" height="500">
+            alt="Single page - light" loading="lazy">
+          <!-- <img src="../assets/images/image-dark.png" class="img-fluid border rounded-3 shadow-lg mb-4"
+            alt="Single page - dark" loading="lazy" width="700" height="500"> -->
         </div>
       </div>
     </div>
@@ -26,6 +26,6 @@
 
 <script>
 export default {
-
+  
 }
 </script>
