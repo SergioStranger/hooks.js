@@ -10,7 +10,7 @@
             <p>
               Перейти в личный кабинет <a href="https://kinopoiskapiunofficial.tech">Kinopoisk Api Unofficial</a> и скопировать токен в настройки
             </p>
-            <router-link class="btn btn-primary" to="/config">Перейти в настройки</router-link>
+            <router-link class="btn btn-primary" to="/config" v-if="this.$route.path == '/'">Перейти в настройки</router-link>
           </div>
         </div>
         <div class="col d-flex align-items-start">
@@ -20,7 +20,7 @@
               Зайти в приложение <a href="https://discord.com/channels/@me">Discord</a>,
               создать <a href="https://support.discord.com/hc/ru/articles/228383668">вебхук</a> и скопировать его в настройки
             </p>
-            <router-link class="btn btn-primary" to="/config">Перейти в настройки</router-link>
+            <router-link class="btn btn-primary" to="/config" v-if="this.$route.path == '/'">Перейти в настройки</router-link>
           </div>
         </div>
         <div class="col d-flex align-items-start">

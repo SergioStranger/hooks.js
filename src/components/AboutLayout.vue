@@ -5,7 +5,7 @@
       <div class="col-lg-6 mx-auto">
         <p class="lead mb-4">
           Простое веб-приложение, для поиска информации о <strong>фильме / сериале / мультфильме /
-            аниме</strong> и отправки контента с автоматизированным оформлением в чат-сервис Discord
+            аниме</strong> и отправки контента с автоматизированным оформлением в Discord
         </p>
         <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
           <a href="#instruction" class="btn btn-primary btn-lg px-4 me-sm-3">Инструкция</a>
