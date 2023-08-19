@@ -2,7 +2,7 @@
     <nav class="navbar navbar-expand-lg border-bottom sticky-md-top"
         :class="nightTheme ? 'navbar-dark bg-dark border-secondary' : 'navbar-light bg-light'">
         <div class="container">
-            <router-link to="/" class="navbar-brand">HOOKS.js</router-link>
+            <router-link to="/" class="navbar-brand"><i class="bi bi-house-fill"></i> HOOKS.js</router-link>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
                 aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -12,9 +12,6 @@
                     <input class="form-check-input" type="checkbox" v-model="nightTheme">
                 </div>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <router-link to="/" class="nav-link">Главная</router-link>
-                    </li>
                     <li class="nav-item">
                         <router-link to="/config" class="nav-link">Настройки</router-link>
                     </li>

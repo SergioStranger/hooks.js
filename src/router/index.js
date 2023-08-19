@@ -9,8 +9,14 @@ const routes = [
   {
     path: '/config',
     name: 'config',
-    component: () => import(/* webpackChunkName: "about" */ '../views/ConfigView.vue')
-  }
+    component: () => import(/* webpackChunkName: "config" */ '../views/ConfigView.vue')
+  },
+  {
+    path: '/404',
+    name: 'NotFound',
+    component: () => import(/* webpackChunkName: "error 404" */ '../views/NotFoundView.vue')
+  },
+  { path: '/:notFound(.*)', redirect: '/404'}
 ]
 
 const router = createRouter({
