@@ -31,8 +31,11 @@
                 </ul>
                 <form class="d-flex">
                     <div class="input-group">
-                        <input class="form-control" type="search" placeholder="Кинопоиск ID" aria-label="Search" id="search-input" v-model="KpID">
-                        <button class="btn btn-success" type="submit"><i class="bi bi-search"></i> Поиск</button>
+                        <input class="form-control" type="search" placeholder="Кинопоиск ID" aria-label="Search"
+                            id="search-input" v-model="KipURL">
+                        <button class="btn btn-success" type="submit" @click.prevent="extractNumber" :disabled="KipTocken === ''">
+                            <i class="bi bi-search"></i> Поиск
+                        </button>
                     </div>
                 </form>
             </div>
@@ -45,14 +48,33 @@ export default {
     data() {
         return {
             nightTheme: localStorage.nightTheme ? JSON.parse(localStorage.nightTheme) : false,
-            KpID: ''
+            KipURL: '',
+            KipTocken: localStorage.KipTocken ? JSON.parse(localStorage.KipTocken) : false
         }
     },
     watch: {
         nightTheme(newTheme) {
             localStorage.nightTheme = JSON.stringify(newTheme)
             this.$emit('swith-theme', newTheme)
-         }
+        }
+    },
+    methods: {
+        extractNumber() {
+            const match = this.KipURL.match(/\d+/);  // ищем первую цифру или цифровую последовательность
+            if (match) {
+                // Resolve the route using the matched number
+                const route = this.$router.resolve({
+                    name: 'search',
+                    params: { id: match[0] }
+                });
+
+                // Navigate to the resolved route
+                this.$router.push(route.href);
+                this.KipURL = ''
+            } else {
+                this.KipID = "Не найдено";
+            }
+        }
     }
 }
 </script>
