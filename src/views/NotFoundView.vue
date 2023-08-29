@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="container px-4 pt-5 my-3 text-center">
+    <div class="container px-4 pt-5 text-center">
       <h1 class="display-4 fw-bold">Ошибка 404!</h1>
       <div class="overflow-hidden">
         <div class="container px-5">

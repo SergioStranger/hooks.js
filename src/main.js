@@ -15,7 +15,7 @@ createApp(App)
     duration: 2000,
     ripple: true,
     position: {
-      x: 'right',
+      x: 'center',
       y: 'top'
     },
     dismissible: false

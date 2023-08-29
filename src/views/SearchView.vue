@@ -54,7 +54,7 @@
               <button type="submit" class="btn btn-success m-1" data-bs-toggle="modal"
                 data-bs-target="#WatchFilm">Смотреть
                 онлайн</button>
-              <router-link class="btn btn-outline-danger m-1" to="/">Отмена</router-link>
+              <button class="btn btn-outline-danger m-1" @click="saveToHistory">Отмена</button>
             </div>
           </div>
         </div>
@@ -108,6 +108,7 @@
 
 <script>
 export default {
+  inject: ['notyf'],
 
   data() {
     return {
@@ -118,24 +119,78 @@ export default {
       message: ""
     }
   },
-  mounted() {
-    fetch('https://kinopoiskapiunofficial.tech/api/v2.2/films/' + this.$route.params.id, {
-      method: 'GET',
-      headers: {
-        'X-API-KEY': JSON.parse(localStorage.KipTocken),
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(res => res.json())
-      .then(json => {
-        this.film = json
-        this.isLoading = false
+  async mounted() {
+    try {
+      let response = await fetch('https://kinopoiskapiunofficial.tech/api/v2.2/films/' + this.$route.params.id, {
+        method: 'GET',
+        headers: {
+          'X-API-KEY': JSON.parse(localStorage.KipTocken),
+          'Content-Type': 'application/json',
+        }
       })
-      .catch(err => console.log(err))
+
+      if (response.status == 200) {
+        this.film = await response.json()
+        this.isLoading = false
+        this.notyf.success('Фильм успешно найден!')
+      } else {
+        switch (response.status) {
+          case 400:
+            this.notyf.error('Неправильный запрос')
+            break
+          case 401:
+            this.notyf.error('Пустой или неправильный токен')
+            break
+          case 404:
+            this.notyf.error('Фильм не найден')
+            break
+          case 429:
+            this.notyf.error('Слишком много запросов. Общий лимит - 20 запросов в секунду')
+            break
+        }
+
+        this.$router.push('/')
+      }
+    } catch (error) {
+      this.notyf.error('Неизвестная ошибка!')
+      console.log('%c' + error['message'], 'font-size: 14px; font-family: Verdana;')
+      this.$router.push('/')
+    }
   },
   methods: {
     sendFilm() {
       console.log('Coming soon')
+    },
+    saveToHistory() {
+      let history = []
+      let now = new Date()
+
+      if (localStorage.userHistory && localStorage.userHistory !== '[]') {
+        history = JSON.parse(localStorage.userHistory)
+      }
+
+      let item = {
+        'name': `${this.film.nameRu} (${this.film.year})`,
+        'poster': this.film.posterUrl,
+        'description': this.film.description,
+        'webUrl': this.film.webUrl,
+        "status": "closed",
+        "time": now.toLocaleString('ru-RU', { timeStyle: 'short', dateStyle: 'long' })
+      }
+
+      history.unshift(item)
+
+      // Чистим дубликаты
+      const res = history.reduce((o, i) => {
+        if (!o.find(v => v.name == i.name)) {
+          o.push(i);
+        }
+        return o;
+      }, []);
+
+      localStorage.userHistory = JSON.stringify(res)
+
+      this.$router.push('/')
     }
   }
 }

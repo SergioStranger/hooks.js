@@ -33,7 +33,7 @@
                     <div class="input-group">
                         <input class="form-control" type="search" placeholder="Кинопоиск ID" aria-label="Search"
                             id="search-input" v-model="KipURL">
-                        <button class="btn btn-success" type="submit" @click.prevent="extractNumber" :disabled="KipTocken === ''">
+                        <button class="btn btn-success" type="submit" @click.prevent="search" :disabled="KipTocken === ''">
                             <i class="bi bi-search"></i> Поиск
                         </button>
                     </div>
@@ -56,23 +56,27 @@ export default {
         nightTheme(newTheme) {
             localStorage.nightTheme = JSON.stringify(newTheme)
             this.$emit('swith-theme', newTheme)
+        },
+        KipURL(newUrl) {
+            const match = newUrl.match(/\d+/g);  // ищем первую цифру или цифровую последовательность
+            match === null ? '' : this.KipURL = match[0]
         }
     },
     methods: {
-        extractNumber() {
-            const match = this.KipURL.match(/\d+/);  // ищем первую цифру или цифровую последовательность
-            if (match) {
+        search() {
+            if (this.KipURL && !this.KipURL.match(/\D+/g)) {
                 // Resolve the route using the matched number
                 const route = this.$router.resolve({
                     name: 'search',
-                    params: { id: match[0] }
+                    params: { id: this.KipURL }
                 });
+
+                this.KipURL = ''
 
                 // Navigate to the resolved route
                 this.$router.push(route.href);
-                this.KipURL = ''
             } else {
-                this.KipID = "Не найдено";
+                this.KipURL = "Не найдено";
             }
         }
     }
