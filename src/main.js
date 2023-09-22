@@ -6,7 +6,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import router from './router'
 import Clipboard from 'v-clipboard'
 import { Notyf } from 'notyf'
-import 'notyf/notyf.min.css';
+import 'notyf/notyf.min.css'
 
 createApp(App)
   .use(router)

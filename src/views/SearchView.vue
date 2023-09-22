@@ -54,7 +54,7 @@
               <button type="submit" class="btn btn-success m-1" data-bs-toggle="modal"
                 data-bs-target="#WatchFilm">Смотреть
                 онлайн</button>
-              <button class="btn btn-outline-danger m-1" @click="saveToHistory">Отмена</button>
+              <button class="btn btn-outline-danger m-1" @click="saveToHistory('closed')">Отмена</button>
             </div>
           </div>
         </div>
@@ -107,17 +107,61 @@
 </template>
 
 <script>
+
 export default {
   inject: ['notyf'],
 
   data() {
     return {
-      film: {},
+      film: null,
       isLoading: true,
       isWatchNow: false,
       togetherUrl: "",
-      message: ""
+      message: "",
+      DiscordWebhook: JSON.parse(localStorage.DisTocken)
     }
+  },
+  computed: {
+    genres: function () {
+      let str = ''
+      for (let genre in this.film.genres) {
+        genre > 0 ? str += ', ' : false
+        str += this.film.genres[genre]['genre']
+      }
+      return str.trimEnd()
+    },
+    countries: function () {
+      let str = ''
+      for (let country in this.film.countries) {
+        country > 0 ? str += ', ' : false
+        str += this.film.countries[country]['country']
+      }
+
+      return str.trimEnd()
+    },
+    filmLength: function () {
+      let length = this.film.filmLength
+      if (length > 60) {
+        let hour = Math.floor(length / 60)
+        let minuts = length % 60
+
+        return hour + ' ч ' + minuts + ' мин'
+      } else {
+        return length + ' мин'
+      }
+    },
+    ratingAgeLimits: function () {
+      return this.film.ratingAgeLimits == null ? 'Приятного просмотра  |  ' : `Возрастное ограничение: ${parseInt(this.film.ratingAgeLimits.replace(/\D+/g, ''))}+  |  `
+    },
+    description: function () {
+      return this.film.description.length > 1000 ? this.film.description.substr(0, 1000) + '...' : this.film.description
+    },
+    watchLink: function () {
+      let links = `[:page_with_curl: ┋ Перейти на Кинопоиск](${this.film.webUrl})`
+      if (this.isWatchNow && this.togetherUrl && this.togetherUrl.indexOf('https://') !== -1)
+        return links + `[:eyes: ┋ Подключиться к совместному каналу для просмотра](${this.togetherUrl}) \n `
+      return links
+    },
   },
   async mounted() {
     try {
@@ -158,10 +202,98 @@ export default {
     }
   },
   methods: {
-    sendFilm() {
-      console.log('Coming soon')
+    async sendFilm() {
+      try {
+        let response = await fetch(this.DiscordWebhook, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            "content": this.message,
+            "embeds": [{
+              "title": this.film.nameRu + ` (${this.film.year})`,
+              "color": 3368703,
+              "timestamp": null,
+              "url": this.film.webUrl,
+              "image": {
+                "url": this.film.posterUrl
+              },
+              "thumbnail": {
+                "url": this.film.posterUrl
+              },
+              "footer": {
+                "text": this.ratingAgeLimits + `Длительность: ${this.filmLength}`,
+                "icon_url": "https://lh6.ggpht.com/S6_A7lzx3EfpKSBKm1Kg0N5IlHGgeja5Lb_CpPzWTB87cIsmKd70cl5GlL961ST4L9A"
+              },
+              "fields": [{
+                "name": "Слоган:",
+                "value": this.film.slogan != null ? this.film.slogan : 'без слогана',
+                "inline": true
+              },
+              {
+                "name": ":film_frames: Жанр:",
+                "value": this.genres,
+                "inline": true
+              },
+              {
+                "name": ":book: Описание сюжета:",
+                "value": this.description,
+                "inline": false
+              },
+              {
+                "name": ":link: Ссылка на просмотр",
+                "value": this.watchLink,
+                "inline": false
+              },
+              {
+                "name": ":map: Страна:",
+                "value": this.countries,
+                "inline": true
+              },
+              {
+                "name": ":flag_ru: Рейтинг КП:",
+                "value": this.film.ratingKinopoisk ? String(this.film.ratingKinopoisk) : 'нет данных',
+                "inline": true
+              },
+              {
+                "name": ":flag_us: Рейтинг IMDb:",
+                "value": this.film.ratingImdb ? String(this.film.ratingImdb) : 'нет данных',
+                "inline": true
+              },
+              ]
+            }]
+          })
+        })
+
+        switch (response.status) {
+          case 204:
+            this.notyf.success('Данные успешно отправленны!')
+            this.saveToHistory('success')
+            break
+          case 401:
+            this.notyf.error('Неверный токен Discord!')
+            break
+          case 400:
+            this.notyf.error('Данные невозможно отправить!')
+            break
+          case 405:
+            this.notyf.error('Не верно указан токен Discord!')
+            break
+          default:
+            // let error = await response.json();
+            this.notyf.error('Непонятная ошибка, подробнее в консоли')
+            console.log('%cОшибка: ', 'font-size: 32px; color: #ed3d3d; font-family: Impact; text-shadow: 2px 4px 4px #000;')
+            // console.log('%c' + error['message'], 'font-size: 14px; font-family: Verdana;')
+            break
+        }
+      } catch (err) {
+        this.notyf.error('Запрос не выполнен, подробнее в консоли')
+        console.log('%cОшибка: ', 'font-size: 32px; color: #ed3d3d; font-family: Impact; text-shadow: 2px 4px 4px #000;')
+        console.log('%c' + err['message'], 'font-size: 14px; font-family: Verdana;')
+      }
     },
-    saveToHistory() {
+    saveToHistory(status) {
       let history = []
       let now = new Date()
 
@@ -174,7 +306,7 @@ export default {
         'poster': this.film.posterUrl,
         'description': this.film.description,
         'webUrl': this.film.webUrl,
-        "status": "closed",
+        "status": status,
         "time": now.toLocaleString('ru-RU', { timeStyle: 'short', dateStyle: 'long' })
       }
 

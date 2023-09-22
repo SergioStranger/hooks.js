@@ -1,17 +1,17 @@
 <template>
   <div class="container">
-    <div class="row my-4 g-0 position-relative rounded bg-light bg-opacity-10 film-card" v-for="item in history"
+    <div class="row my-4 g-0 position-relative bg-light bg-opacity-10 film-card" v-for="item in history"
       :key="item.id">
-      <div class="col-xl-2 col-md-4 mb-md-0 p-md-4">
-        <img class="w-100 rounded" :src="item.poster">
+      <div class="col-xl-2 col-md-4">
+        <img class="w-100" :src="item.poster">
       </div>
-      <div class="col-xl-10 col-md-8 p-4 ps-md-0">
+      <div class="col-xl-10 col-md-8 px-4 py-3">
         <div class="d-lg-flex justify-content-between">
-          <h4 class="mt-0">{{ item.name }}</h4>
+          <h2 class="">{{ item.name }}</h2>
 
           <small>
-            <!-- <span class="badge bg-success"><i class="bi bi-check"></i> Отправлено</span> -->
-            <span class="badge bg-danger"><i class="bi bi-x"></i> Не отправлено</span>
+            <span class="badge bg-danger" v-if="item.status === 'closed'"><i class="bi bi-x"></i> Не отправлено</span>
+            <span class="badge bg-success" v-if="item.status === 'success'"><i class="bi bi-check"></i> Отправлено</span>
             <i class="bi bi-alarm ps-3"></i> {{ item.time }}
           </small>
         </div>
@@ -38,6 +38,11 @@ export default {
 .film-card {
   transition: 0.2s ease-in-out;
   cursor: pointer;
+  border-radius: 20px;
+}
+
+.film-card img {
+  border-radius: 20px 0 0 20px;
 }
 
 .film-card:hover {

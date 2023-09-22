@@ -8,7 +8,7 @@
         <input type="password" class="form-control" placeholder="Кинопоиск токен" aria-describedby="addon-wrapping"
           v-model="KipTocken">
         <button class="btn btn-secondary"
-          :disabled="this.DisTocken === ''"
+          :disabled="this.KipTocken === ''"
           type="submit" 
           v-clipboard:copy="this.KipTocken"
           v-clipboard:success="clipboardSuccessHandler"
