@@ -51,58 +51,12 @@
             <div class="col-auto">
               <button type="submit" class="btn btn-primary m-1" @click.prevent="sendFilm()">Отправить
                 в Discord</button>
-              <button type="submit" class="btn btn-success m-1" data-bs-toggle="modal"
-                data-bs-target="#WatchFilm">Смотреть
-                онлайн</button>
               <button class="btn btn-outline-danger m-1" @click="saveToHistory('closed')">Отмена</button>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-
-    <!-- WatchFilm Modal -->
-    <!-- <div class="modal fade" id="WatchFilm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-      aria-labelledby="WatchFilmLabel" aria-hidden="true">
-      <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="WatchFilmLabel">Просмотр фильма</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-              @click.prevent="closeFrame()"></button>
-          </div>
-          <div class="modal-body">
-            <div class="ratio ratio-21x9">
-              <iframe id="watchFrame" :src="filmLink" allowfullscreen></iframe>
-            </div>
-
-            <div class="alert alert-danger mb-0" role="alert">
-              <h4 class="alert-heading">Внимание!</h4>
-              <p>
-                Конкретный сайт собирает информацию о фильмах / сериалах / мультфильмах / аниме
-                из открытых источников и хранит их в кеше браузера.
-                Любой видеоконтент предоставляется из сторонних источников, к которым разработчик сайта
-                не имеет абсолютно никакого отношения.
-              </p>
-              <hr>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="agree">
-                <label class="form-check-label h-3" for="agree">
-                  Я согласен с предупреждением выше
-                </label>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-              @click.prevent="closeFrame()">Закрыть</button>
-            <a :href="filmLink" target="_blank" class="btn btn-primary">Открыть в новой вкладке</a>
-          </div>
-        </div>
-      </div>
-    </div> -->
-    <!-- / WatchFilm Modal -->
   </div>
 </template>
 
