@@ -1,15 +1,11 @@
 <template>
-  <div class="py-3">
-    <div class="container">
-      <FormLayout />
-      <InstructionLayout />
-    </div>
-  </div>
+  <FormLayout />
+  <InstructionLayout />
 </template>
 
 <script>
-import InstructionLayout from '@/components/InstructionLayout.vue';
 import FormLayout from '@/components/FormLayout.vue';
+import InstructionLayout from '@/components/InstructionLayout.vue';
 
 export default {
   name: 'ConfigView',

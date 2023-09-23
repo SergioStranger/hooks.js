@@ -20,10 +20,10 @@
           </div>
           <p class="description">{{ item.description }}</p>
         </div>
-        <div class="d-lg-flex d-sm-grid">
-          <a class="btn btn-primary px-3 me-lg-3 my-md-1 my-sm-2" :href="item.webUrl" target="_blank">На страницу фильма</a>
-          <a class="btn btn-outline-success px-3 my-md-1 my-sm-2">Повторить поиск</a>
-          <a class="btn btn-danger ms-lg-auto my-md-1 my-sm-2"><i class="bi bi-trash"></i> Удалить</a>
+        <div class="d-grid d-lg-flex">
+          <a class="btn btn-primary px-3 me-lg-3 my-md-1 my-2" :href="item.webUrl" target="_blank">На страницу фильма</a>
+          <a class="btn btn-outline-success px-3 my-md-1 my-2">Повторить поиск</a>
+          <a class="btn btn-danger ms-lg-auto my-md-1 my-2"><i class="bi bi-trash"></i> Удалить</a>
         </div>
       </div>
     </div>

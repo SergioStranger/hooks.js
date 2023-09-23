@@ -1,5 +1,5 @@
 <template>
-  <div class="py-5 bg-dark text-light footer">
+  <div class="py-5 bg-dark text-light mt-5 mt-lg-auto">
     <div class="container" id="instruction">
       <h1 class="pb-2 border-bottom">Что требуется для работы веб-приложения?</h1>
 

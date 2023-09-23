@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div>
     <AboutLayout />
     <CardsLayout :history="history"/>
     <InstructionLayout />

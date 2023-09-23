@@ -1,6 +1,8 @@
 <template>
-  <HeaderLayout @swith-theme="switchTheme" />
-  <router-view class="view" :class="nightTheme ? 'bg-dark text-light' : ''" />
+  <div :class="nightTheme ? 'bg-dark text-light' : null" class="d-flex flex-column mh-100">
+    <HeaderLayout @swith-theme="switchTheme" />
+    <router-view />
+  </div>
 </template>
 
 <script>
@@ -27,7 +29,7 @@ export default {
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Balsamiq+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
-.view {
-  min-height: calc(100vh - 57px);
+.mh-100 {
+  min-height: 100vh;
 }
 </style>

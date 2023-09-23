@@ -90,7 +90,7 @@ export default {
 }
 
 .navbar {
-  padding-bottom: 80px;
+  margin-bottom: 80px;
 }
 
 .nav-item {
