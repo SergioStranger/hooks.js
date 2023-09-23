@@ -32,4 +32,39 @@ export default {
 .mh-100 {
   min-height: 100vh;
 }
+
+h1,
+h2 {
+  font-family: 'Balsamiq Sans';
+  font-style: normal;
+  line-height: normal;
+}
+
+h1 {
+  font-weight: 700;
+  font-size: 48px;
+}
+
+h2 {
+  font-weight: 400;
+  font-size: 32px;
+}
+
+p {
+  font-family: Segoe UI;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  text-align: justify;
+}
+
+a {
+  text-decoration: none;
+}
+
+.card-block {
+  padding: 28px;
+  position: relative;
+}
 </style>

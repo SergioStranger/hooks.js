@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="container p-5">
+    <div class="container px-5">
       <!-- Загрузка страницы -->
       <div v-if="isLoading">
         <h1>Loading...</h1>
@@ -8,51 +8,67 @@
 
 
       <!-- Если страница заргужена -->
-      <div class="row g-0 position-relative" v-else>
-        <div class="col-lg-4 mb-md-0 p-md-4">
-          <img :src="film.posterUrl" class="card-img-top">
+      <div class="film-card d-flex flex-wrap" v-else>
+
+        <div class="col-12 col-xl-4">
+          <img :src="film.posterUrl" class="h-100 w-100">
         </div>
-        <div class="col-lg-8 p-4 ps-md-0">
-          <h4 class="mt-0">{{ film.nameRu }} ({{ film.year }})</h4>
-          <p>{{ film.description }}</p>
-          <div class="container">
-            <div class="row">
-              <div class="col-6 col-md-3">Год</div>
-              <div class="col-6 col-md-3">Длительность</div>
-              <div class="col-6 col-md-3">Жанр</div>
-              <div class="col-6 col-md-3">Смотрим сейчас?</div>
+
+        <div class="card-block d-flex flex-column justify-content-between col-12 col-xl-8">
+          <div class="card-block__text">
+            <div class="row mb-4">
+              <div class="col-10">
+                <h2 class="m-0">{{ film.nameRu }}</h2>
+                <small>{{ film.nameOriginal }}</small>
+              </div>
+              <div class="col-2 d-flex flex-wrap justify-content-center rate">
+                <div class="badge bg-success px-4 py-2">{{ film.ratingKinopoisk }}</div>
+                <div>{{ film.ratingKinopoiskVoteCount }} оценок</div>
+              </div>
             </div>
-            <div class="row">
-              <div class="col-6 col-md-3">{{ film.year }}</div>
-              <div class="col-6 col-md-3">{{ film.filmLength }} мин</div>
-              <div class="col-6 col-md-3">
-                <span v-for="(genre, index) in film.genres" :key="index">
-                  {{ genre.genre }}{{ index !== film.genres.length - 1 ? ', ' : '' }}
-                </span>
-              </div>
-              <div class="col-3 col-md-2">
-                <div class="form-check form-switch me-auto mb-2 mb-lg-0">
-                  <input class="form-check-input" type="checkbox" checked v-model="isWatchNow">
-                </div>
-              </div>
+
+            <div class="card-block__points mb-4">
+              <table>
+                <tr>
+                  <td>Страна</td>
+                  <td><span v-for="(country, index) in film.countries" :key="index">
+                      {{ country.country }}{{ index !== film.countries.length - 1 ? ', ' : '' }}
+                    </span></td>
+                </tr>
+                <tr>
+                  <td>Жанр</td>
+                  <td><span v-for="(genre, index) in film.genres" :key="index">
+                      {{ genre.genre }}{{ index !== film.genres.length - 1 ? ', ' : '' }}
+                    </span></td>
+                </tr>
+                <tr>
+                  <td>Длительность</td>
+                  <td>{{ film.filmLength }} мин</td>
+                </tr>
+                <tr>
+                  <td>Слоган</td>
+                  <td>{{ film.slogan ? film.slogan : '—' }}</td>
+                </tr>
+                <tr>
+                  <td>Год</td>
+                  <td>{{ film.year }}</td>
+                </tr>
+              </table>
+            </div>
+
+            <p class="description">{{ film.description }}</p>
+
+            <div class="mb-3" v-if="isWatchNow">
+              <label class="form-label">Ссылка для совместного просмотра</label>
+              <input type="text" class="form-control" v-model="togetherUrl">
             </div>
           </div>
 
-          <div class="mb-3" v-if="isWatchNow">
-            <label class="form-label">Ссылка для совместного просмотра</label>
-            <input type="text" class="form-control" v-model="togetherUrl">
-          </div>
-          <div class="row g-0 position-relative">
-            <div class="col-md-12 mb-2 ps-md-0">
-              <label for="DiscordMessage" class="form-label">Сообщение для
-                отправки</label>
-              <textarea class="form-control" id="DiscordMessage" rows="3" v-model="message"></textarea>
-            </div>
-            <div class="col-auto">
-              <button type="submit" class="btn btn-primary m-1" @click.prevent="sendFilm()">Отправить
-                в Discord</button>
-              <button class="btn btn-outline-danger m-1" @click="saveToHistory('closed')">Отмена</button>
-            </div>
+          <div class="d-grid d-lg-flex">
+            <a class="btn btn-outline-primary px-3 me-lg-3 my-md-1 my-2" @click.prevent="sendFilm()">Отправить в
+              Discord</a>
+            <a class="btn btn-outline-success px-3 my-md-1 my-2">Смотреть онлайн</a>
+            <a class="btn btn-danger ms-lg-auto my-md-1 my-2" @click="saveToHistory('closed')">Отмена</a>
           </div>
         </div>
       </div>
@@ -281,3 +297,70 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.film-card {
+  box-shadow: 0px 0px 42px 0px rgba(0, 0, 0, 0.25);
+  border-radius: 22px;
+}
+
+.film-card img {
+  border-radius: 22px 0 0 22px;
+  height: inherit;
+}
+
+.card-block {
+  padding: 26px;
+}
+
+small {
+  color: #575757;
+  font-family: 'Balsamiq Sans';
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.badge {
+  font-family: 'Balsamiq Sans';
+  height: 37px;
+  font-size: 20px;
+  font-style: normal;
+  line-height: normal;
+  text-align: center;
+}
+
+.rate {
+  font-style: normal;
+  line-height: normal;
+  text-align: center;
+}
+
+.card-block__points {
+  font-family: 'Balsamiq Sans';
+  font-size: 20px;
+  line-height: normal;
+}
+
+td {
+  padding-right: 15px;
+}
+
+.description {
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.btn {
+  font-family: 'Balsamiq Sans';
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  border-radius: 12px;
+}
+</style>

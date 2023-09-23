@@ -41,6 +41,7 @@ export default {
   font-family: Segoe UI;
   line-height: normal;
   font-weight: 400;
+  text-align: center;
 }
 
 .btn {

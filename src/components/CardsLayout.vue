@@ -4,7 +4,7 @@
     <hr>
     <div class="row g-0 position-relative bg-light bg-opacity-10 film-card" v-for="item in history" :key="item.id">
       <div class="col-xl-2 col-lg-4">
-        <img class="w-100" :src="item.poster">
+        <img class="w-100 h-100" :src="item.poster">
       </div>
       <div class="col-xl-10 col-lg-8 card-block d-flex flex-column justify-content-between">
         <div>
@@ -71,12 +71,6 @@ small {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-
-.btns-group {
-  position: absolute;
-  bottom: 28px;
-}
-
 .btn {
   font-family: 'Balsamiq Sans';
   font-size: 20px;
