@@ -64,18 +64,11 @@ export default {
   methods: {
     search() {
       if (this.KipURL && !this.KipURL.match(/\D+/g)) {
-        // Resolve the route using the matched number
-        const route = this.$router.resolve({
-          name: 'search',
-          params: { id: this.KipURL }
-        });
+        this.$router.push({path: `/search/${this.KipURL}`})
 
         this.KipURL = ''
-
-        // Navigate to the resolved route
-        this.$router.push(route.href);
       } else {
-        this.KipURL = "Не найдено";
+        this.KipURL = 'Не найдено';
       }
     }
   }

@@ -27,7 +27,6 @@ export default {
   mounted() {
     if (!this.history || this.history.length == 0) {
       this.insertHistory()
-      console.log('Объект пустой!');
     }
   },
   methods: {

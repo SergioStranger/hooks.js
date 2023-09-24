@@ -68,7 +68,7 @@
             <a class="btn btn-outline-primary px-3 me-lg-3 my-md-1 my-2" @click.prevent="sendFilm()">Отправить в
               Discord</a>
             <a class="btn btn-outline-success px-3 my-md-1 my-2">Смотреть онлайн</a>
-            <a class="btn btn-danger ms-lg-auto my-md-1 my-2" @click="saveToHistory('closed')">Отмена</a>
+            <router-link class="btn btn-danger ms-lg-auto my-md-1 my-2" to="/">Отмена</router-link>
           </div>
         </div>
       </div>
@@ -89,6 +89,11 @@ export default {
       togetherUrl: "",
       message: "",
       DiscordWebhook: localStorage.DisTocken ? JSON.parse(localStorage.DisTocken) : null
+    }
+  },
+  watch: {
+    '$route.params.id'() {
+      this.loadPage()
     }
   },
   computed: {
@@ -133,45 +138,49 @@ export default {
       return links
     },
   },
-  async mounted() {
-    try {
-      let response = await fetch('https://kinopoiskapiunofficial.tech/api/v2.2/films/' + this.$route.params.id, {
-        method: 'GET',
-        headers: {
-          'X-API-KEY': JSON.parse(localStorage.KipTocken),
-          'Content-Type': 'application/json',
-        }
-      })
-
-      if (response.status == 200) {
-        this.film = await response.json()
-        this.isLoading = false
-        this.notyf.success('Фильм успешно найден!')
-      } else {
-        switch (response.status) {
-          case 400:
-            this.notyf.error('Неправильный запрос')
-            break
-          case 401:
-            this.notyf.error('Пустой или неправильный токен')
-            break
-          case 404:
-            this.notyf.error('Фильм не найден')
-            break
-          case 429:
-            this.notyf.error('Слишком много запросов. Общий лимит - 20 запросов в секунду')
-            break
-        }
-
-        this.$router.push('/')
-      }
-    } catch (error) {
-      this.notyf.error('Ошибка запроса')
-      console.log('%c' + error['message'], 'font-size: 14px; font-family: Balsamiq Sans;')
-      this.$router.push('/')
-    }
+  async created() {
+    this.loadPage()
   },
   methods: {
+    async loadPage() {
+      try {
+        let response = await fetch('https://kinopoiskapiunofficial.tech/api/v2.2/films/' + this.$route.params.id, {
+          method: 'GET',
+          headers: {
+            'X-API-KEY': JSON.parse(localStorage.KipTocken),
+            'Content-Type': 'application/json',
+          }
+        })
+
+        if (response.status == 200) {
+          this.film = await response.json()
+          this.isLoading = false
+          this.saveToHistory('closed')
+          this.notyf.success('Фильм успешно найден!')
+        } else {
+          switch (response.status) {
+            case 400:
+              this.notyf.error('Неправильный запрос')
+              break
+            case 401:
+              this.notyf.error('Пустой или неправильный токен')
+              break
+            case 404:
+              this.notyf.error('Фильм не найден')
+              break
+            case 429:
+              this.notyf.error('Слишком много запросов. Общий лимит - 20 запросов в секунду')
+              break
+          }
+
+          this.$router.push('/')
+        }
+      } catch (error) {
+        this.notyf.error('Ошибка запроса')
+        console.log('%c' + error['message'], 'font-size: 14px; font-family: Balsamiq Sans;')
+        this.$router.push('/')
+      }
+    },
     async sendFilm() {
       try {
         let response = await fetch(this.DiscordWebhook, {
@@ -291,8 +300,6 @@ export default {
       }, []);
 
       localStorage.userHistory = JSON.stringify(res)
-
-      this.$router.push('/')
     }
   }
 }
