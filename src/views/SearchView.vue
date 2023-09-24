@@ -57,15 +57,11 @@
             </div>
 
             <p class="description">{{ film.description }}</p>
-
-            <div class="mb-3" v-if="isWatchNow">
-              <label class="form-label">Ссылка для совместного просмотра</label>
-              <input type="text" class="form-control" v-model="togetherUrl">
-            </div>
           </div>
 
           <div class="d-grid d-lg-flex">
-            <a class="btn btn-outline-primary px-3 me-lg-3 my-md-1 my-2" @click.prevent="sendFilm()">Отправить в
+            <a class="btn btn-outline-primary px-3 me-lg-3 my-md-1 my-2" data-bs-toggle="modal"
+              data-bs-target="#sendDiscord">Отправить в
               Discord</a>
             <a class="btn btn-outline-success px-3 my-md-1 my-2">Смотреть онлайн</a>
             <router-link class="btn btn-danger ms-lg-auto my-md-1 my-2" to="/">Отмена</router-link>
@@ -73,11 +69,55 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="sendDiscord" tabindex="-1" aria-labelledby="sendDiscordLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-dark">
+            <div class="mb-3">
+              <div class="row">
+                <label for="together" class="form-label col-7">Совместный просмотр</label>
+                <div class="form-check col-5">
+                  <input class="form-check-input" type="checkbox" value="" id="onTogether" v-model="this.together.isWatchNow">
+                  <label class="form-check-label" for="onTogether">
+                    Включить совместный просмотр
+                  </label>
+                </div>
+              </div>
+              <input type="text" class="form-control" id="together" placeholder="https://hooks.nyako.ru" 
+              :disabled="!this.together.isWatchNow"
+              v-model="this.together.url">
+            </div>
+            <div class="mb-3">
+              <div class="row">
+                <label for="message" class="form-label col-7">Сообщение для Discord</label>
+                <div class="form-check col-5">
+                  <input class="form-check-input" type="checkbox" value="" id="onMessage" v-model="this.message.isMessage">
+                  <label class="form-check-label" for="onMessage">
+                    Включить дополнительное сообщение
+                  </label>
+                </div>
+              </div>
+              <textarea class="form-control" id="message" rows="3" 
+              :disabled="!this.message.isMessage"
+              v-model="this.message.text"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success" data-bs-dismiss="modal" @click="sendFilm">Отправить</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script>
-
 export default {
   inject: ['notyf'],
 
@@ -85,15 +125,23 @@ export default {
     return {
       film: null,
       isLoading: true,
-      isWatchNow: false,
-      togetherUrl: "",
-      message: "",
+      together: {
+        isWatchNow: false,
+        url: localStorage.watchTogether ? JSON.parse(localStorage.watchTogether) : ''
+      },
+      message: {
+        isMessage: false,
+        text: ''
+      },
       DiscordWebhook: localStorage.DisTocken ? JSON.parse(localStorage.DisTocken) : null
     }
   },
   watch: {
     '$route.params.id'() {
       this.loadPage()
+    },
+    'together.url'(newUrl) {
+      localStorage.watchTogether = JSON.stringify(newUrl)
     }
   },
   computed: {
@@ -132,9 +180,9 @@ export default {
       return this.film.description.length > 1000 ? this.film.description.substr(0, 1000) + '...' : this.film.description
     },
     watchLink: function () {
-      let links = `[:page_with_curl: ┋ Перейти на Кинопоиск](${this.film.webUrl})`
-      if (this.isWatchNow && this.togetherUrl && this.togetherUrl.indexOf('https://') !== -1)
-        return links + `[:eyes: ┋ Подключиться к совместному каналу для просмотра](${this.togetherUrl}) \n `
+      let links = `[:page_with_curl: ┋ Перейти на Кинопоиск](${this.film.webUrl})\n`
+      if (this.together.isWatchNow && this.together.url && this.together.url.indexOf('https://') !== -1)
+        return links + `[:eyes: ┋ Подключиться к совместному каналу для просмотра](${this.together.url}) \n `
       return links
     },
   },
@@ -189,7 +237,7 @@ export default {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            "content": this.message,
+            "content": this.message.isMessage ? this.message.text : null,
             "embeds": [{
               "title": this.film.nameRu + ` (${this.film.year})`,
               "color": 3368703,
@@ -249,6 +297,7 @@ export default {
           case 204:
             this.notyf.success('Данные успешно отправленны!')
             this.saveToHistory('success')
+            this.$router.push('/')
             break
           case 401:
             this.notyf.error('Неверный токен Discord!')
@@ -369,5 +418,21 @@ td {
   font-weight: 400;
   line-height: normal;
   border-radius: 12px;
+}
+
+.modal-header {
+  border: 0;
+  padding: 10px;
+}
+
+.modal-body {
+  padding: 0 22px;
+  font-family: 'Balsamiq sans';
+}
+
+.modal-footer {
+  border: 0;
+  padding: 0 0 20px 18px;
+  display: block;
 }
 </style>
