@@ -88,7 +88,7 @@ export default {
       isWatchNow: false,
       togetherUrl: "",
       message: "",
-      DiscordWebhook: JSON.parse(localStorage.DisTocken)
+      DiscordWebhook: localStorage.DisTocken ? JSON.parse(localStorage.DisTocken) : null
     }
   },
   computed: {
@@ -166,8 +166,8 @@ export default {
         this.$router.push('/')
       }
     } catch (error) {
-      this.notyf.error('Неизвестная ошибка!')
-      console.log('%c' + error['message'], 'font-size: 14px; font-family: Verdana;')
+      this.notyf.error('Ошибка запроса')
+      console.log('%c' + error['message'], 'font-size: 14px; font-family: Balsamiq Sans;')
       this.$router.push('/')
     }
   },

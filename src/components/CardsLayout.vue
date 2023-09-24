@@ -2,7 +2,7 @@
   <div class="container">
     <h1>История поиска</h1>
     <hr>
-    <div class="row g-0 position-relative bg-light bg-opacity-10 film-card" v-for="item in history" :key="item.id">
+    <div class="row g-0 position-relative bg-light bg-opacity-10 film-card" v-for="(item, id) in history" :key="item.id">
       <div class="col-xl-2 col-lg-4">
         <img class="w-100 h-100" :src="item.poster">
       </div>
@@ -22,8 +22,8 @@
         </div>
         <div class="d-grid d-lg-flex">
           <a class="btn btn-primary px-3 me-lg-3 my-md-1 my-2" :href="item.webUrl" target="_blank">На страницу фильма</a>
-          <a class="btn btn-outline-success px-3 my-md-1 my-2">Повторить поиск</a>
-          <a class="btn btn-danger ms-lg-auto my-md-1 my-2"><i class="bi bi-trash"></i> Удалить</a>
+          <a class="btn btn-outline-success px-3 my-md-1 my-2" @click="research(item.webUrl)">Повторить поиск</a>
+          <a class="btn btn-danger ms-lg-auto my-md-1 my-2" @click="removeHistory(id)"><i class="bi bi-trash"></i> Удалить</a>
         </div>
       </div>
     </div>
@@ -32,7 +32,26 @@
 
 <script>
 export default {
-  props: ['history']
+  props: ['history'],
+
+  data() {
+    return {
+
+    }
+  },
+  methods: {
+    research(url) {
+      const route = this.$router.resolve({
+        name: 'search',
+        params: { id: url.match(/\d+/g)[0] }
+      });
+
+      this.$router.push(route.href);
+    },
+    removeHistory(id) {
+      this.$emit('remove', id)
+    }
+  }
 }
 </script>
 
@@ -62,6 +81,7 @@ small {
   font-family: 'Balsamiq Sans';
   font-size: 12px;
   font-weight: 400;
+  display: ruby;
 }
 
 .description {
@@ -71,6 +91,7 @@ small {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
 .btn {
   font-family: 'Balsamiq Sans';
   font-size: 20px;
