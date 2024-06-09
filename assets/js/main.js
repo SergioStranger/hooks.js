@@ -1,5 +1,3 @@
-import Vue from './vue.esm.browser.js'
-
 const kinopoiskApiHost = 'https://kinopoiskapiunofficial.tech/api/v2.2/films/'
 
 // Библиотека уведомлений
